@@ -44,7 +44,7 @@ a { color: var(--heat); text-underline-offset: 2px; }
 .lbl small { display: block; color: var(--ink-2); font-size: 10.5px; }
 .lbl.l::after { left: auto; right: 0; } .lbl.r::after { left: 0; }
 .lbl.l { text-align: right; } .lbl.r { text-align: left; }
-.lbl.mw { color: var(--mw); } .lbl.m31 { color: var(--m31); } .lbl.obs { color: var(--obs); } .lbl.sol { color: #ffd97a; }
+.lbl.cmb { color: #9fe3ff; } .lbl.mw { color: var(--mw); } .lbl.m31 { color: var(--m31); } .lbl.obs { color: var(--obs); } .lbl.sol { color: #ffd97a; }
 .lbl.below { padding-bottom: 0; padding-top: 14px; } .lbl.below::after { bottom: auto; top: 0; height: 12px; }
 
 #card {
@@ -68,6 +68,11 @@ a { color: var(--heat); text-underline-offset: 2px; }
 #epoch .when { font-family: var(--mono); font-size: 11px; letter-spacing: .03em; color: var(--heat); margin: 0 0 5px; }
 #epoch h2 { font-size: 19px; line-height: 1.15; font-style: italic; font-weight: 500; margin: 0 0 6px; text-wrap: balance; }
 #epoch .txt { font-size: 14px; line-height: 1.45; color: var(--ink-2); margin: 0; }
+#ruler { display: block; width: 100%; height: 40px; margin: 12px 0 0; }
+#epoch .wl { font-family: var(--mono); font-size: 11px; color: var(--ink-2); margin: 2px 0 0; }
+#cmbBox .when { color: #9fe3ff; }
+.btn.cmbBtn[aria-pressed="false"] { color: var(--ink); }
+.btn.cmbBtn[aria-pressed="true"] { background: rgba(63, 182, 214, .22); border-color: rgba(120, 210, 240, .75); color: #d4f4ff; }
 
 #tools { position: fixed; z-index: 5; top: calc(var(--gut) + env(safe-area-inset-top, 0px)); right: var(--gut); display: flex; gap: 8px; }
 .btn { border: 1px solid rgba(239,231,214,.24); background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 999px; padding: 7px 13px; font-family: var(--mono); font-size: 12px; cursor: pointer; }
@@ -116,12 +121,13 @@ a { color: var(--heat); text-underline-offset: 2px; }
   #card .more { display: none; }
   #card.open .more { display: block; }
   #card .more p { font-size: 13.5px; }
-  .btnrow { display: flex; gap: 8px; margin: 0 0 8px; }
+  .btnrow { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 0 0 8px; }
   .btnrow .btn, .btnrow .seg button { padding: 5px 10px; font-size: 11.5px; }
   #epoch { left: var(--gut); right: var(--gut); width: auto; padding: 9px 13px 10px; }
   #epoch .when { font-size: 10px; margin-bottom: 3px; }
   #epoch h2 { font-size: 16px; margin-bottom: 3px; }
   #epoch .txt { font-size: 12.5px; line-height: 1.4; }
+  #ruler { height: 36px; margin-top: 8px; }
   #live { font-size: 11px; }
   #tools { display: none; }
   #notes { top: 50%; bottom: auto; left: var(--gut); right: var(--gut); width: auto; transform: translateY(-50%); max-height: 70%; }
@@ -150,7 +156,7 @@ addEventListener("error", function (e) { var l = document.getElementById("loadin
   <p class="eyebrow" data-i18n="eyebrow">Del Big Bang a hoy</p>
   <h1 data-i18n="h1">¿El Big Bang fue un punto?</h1>
   <p class="lede" data-i18n-html="lede">No. Fue un estado denso y caliente en <em>todo</em> el espacio a la vez. El plano es ese espacio: infinito, sin borde y sin centro.</p>
-  <div class="btnrow"><button class="btn" id="moreBtn" aria-expanded="false">¿Qué estoy viendo?</button><button class="btn" id="notesBtn2" aria-controls="notes" data-i18n="notes">Notas</button><div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
+  <div class="btnrow"><button class="btn" id="moreBtn" aria-expanded="false">¿Qué estoy viendo?</button><button class="btn cmbBtn" aria-pressed="false" data-i18n="cmbBtn">Fondo cósmico</button><button class="btn" id="notesBtn2" aria-controls="notes" data-i18n="notes">Notas</button><div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
   <div class="more">
     <p data-i18n-html="more1">La cuadrícula se estira en todas partes y cada cuadro se divide en otros más chicos que vuelven a crecer. El <span class="k-obs">círculo verde</span> encierra todo lo que hoy podemos ver: al principio era diminuto, pero alrededor había más universo, igual de denso.</p>
     <p data-i18n-html="more2">En el centro, la materia de la futura <span class="k-mw">Vía Láctea</span> (con los átomos de la Tierra) y, al lado, la de <span class="k-m31">Andrómeda</span>. La expansión las separó, la gravedad las frenó y hoy se acercan.</p>
@@ -164,6 +170,7 @@ addEventListener("error", function (e) { var l = document.getElementById("loadin
 
 <div id="tools">
   <button class="btn" id="lblBtn" aria-pressed="true" data-i18n="labels">Etiquetas</button>
+  <button class="btn cmbBtn" aria-pressed="false" data-i18n="cmbBtn">Fondo cósmico</button>
   <button class="btn" id="notesBtn" aria-expanded="false" aria-controls="notes" data-i18n="notes">Notas</button>
   <div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div>
 </div>
@@ -187,9 +194,8 @@ addEventListener("error", function (e) { var l = document.getElementById("loadin
 </aside>
 
 <aside id="epoch" aria-live="polite" data-i18n-aria="epochAria" aria-label="Qué está pasando">
-  <p class="when" id="eWhen"></p>
-  <h2 id="eTitle"></h2>
-  <p class="txt" id="eText"></p>
+  <div id="epBox"><p class="when" id="eWhen"></p><h2 id="eTitle"></h2><p class="txt" id="eText"></p></div>
+  <div id="cmbBox" hidden><p class="when" id="cWhen"></p><h2 id="cTitle"></h2><p class="txt" id="cText"></p><canvas id="ruler" aria-hidden="true"></canvas><p class="wl" id="cWl"></p></div>
 </aside>
 
 <div id="bar">
@@ -274,6 +280,14 @@ const ltOfLa = la => { const v = interp(LAt, LTt, la); return v === null ? LTt[0
 const AGE_S = 10 ** ltOfLa(0), AGE_GYR = AGE_S / S_PER_GYR, LT_AGE = Math.log10(AGE_S);
 const aOfGyr = g => 10 ** laOfLt(Math.log10(Math.max(g, 1e-70) * S_PER_GYR));
 const T_REC_S = 10 ** ltOfLa(Math.log10(1 / 1090.9));
+// tiempo conforme η(a) = ∫ c dt / a  [Mpc comóviles]: camino que recorre la luz en el espacio que se estira
+const ETA = new Float64Array(NST + 1);
+(() => {
+  const dl = (LA_MAX - LA_MIN) / NST * Math.LN10, f = la => { const a = 10 ** la; return 299792.458 / KM_PER_MPC / (a * H0s * Math.sqrt(E2(a))); };
+  let f0 = f(LA_MIN), e = f0; ETA[0] = e;
+  for (let i = 1; i <= NST; i++) { const f1 = f(LAt[i]); e += 0.5 * (f0 + f1) * dl; f0 = f1; ETA[i] = e; }
+})();
+const etaOfLt = lt => { const v = interp(LTt, ETA, lt); return v === null ? ETA[0] : v; };
 function cosmoAt(lt) {
   const la = laOfLt(lt), a = 10 ** la, T = tempOfA(a), e2 = E2(a);
   return { lt, t: 10 ** lt, a, la, z: 1 / a - 1, T, rho: RHO_C0 * e2, spec: 10 ** lt < T_INFL_END };
@@ -594,6 +608,7 @@ uniform float uPlasma; uniform float uGrowth; uniform float uWebA; uniform vec3 
 uniform float uGalA; uniform float uGalHaze; uniform float uIon; uniform float uIonA;
 uniform float uFogK; uniform vec3 uFogCol; uniform float uEdge; uniform vec2 uEdgeC;
 uniform float uObsR; uniform float uObsA; uniform vec3 uObsCol; uniform float uTime; uniform float uFoam;
+uniform float uRip; uniform float uRipCell; uniform vec3 uRipCol;
 varying vec3 vWorld; varying float vDepth;
 float hash12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 float hash11(float n){ return fract(sin(n * 12.9898 + 4.1414) * 43758.5453); }
@@ -651,6 +666,17 @@ void main(){
     }
     if (uGalA > 0.001) col += uGalA * galaxies(tuv);
   }
+  // destello: al volverse transparente, cada punto suelta luz en todas direcciones a la vez
+  if (uRip >= 0.0 && uRip < 1.0) {
+    vec2 c0 = floor(p / uRipCell); float fr2 = max(max(fwidth(p.x), fwidth(p.y)), 1e-6), rr = 0.0;
+    for (int j = -1; j <= 1; j++) for (int i = -1; i <= 1; i++) {
+      vec2 cc = c0 + vec2(float(i), float(j));
+      vec2 c = (cc + 0.2 + 0.6 * vec2(hash12(cc * 1.37 + 3.1), hash12(cc * 2.11 + 7.7))) * uRipCell;
+      float d = abs(length(p - c) - uRip * uRipCell * 1.15) / fr2;
+      rr += 1.0 - smoothstep(0.6, 2.0, d);
+    }
+    col += uRipCol * min(rr, 1.6) * (1.0 - uRip) * smoothstep(0.0, 0.04, uRip);
+  }
   // cuadrícula jerárquica infinita
   float gl = 0.0;
   { float k0 = ceil(log2(fw * 4.5));
@@ -698,6 +724,7 @@ const sheetMat = new THREE.ShaderMaterial({
     uPlasma: U(0), uGrowth: U(0), uWebA: U(0), uWebCol: U(lin(0x6f86b8)), uGalA: U(0), uGalHaze: U(0.03), uIon: U(0), uIonA: U(0),
     uFogK: U(0.002), uFogCol: U(new THREE.Color()), uEdge: U(4000), uEdgeC: U(new THREE.Vector2()),
     uObsR: U(0), uObsA: U(1), uObsCol: U(lin(0x8ff0cf)), uTime: U(0), uFoam: U(0),
+    uRip: U(-1), uRipCell: U(1000), uRipCol: U(new THREE.Color(1.0, 0.72, 0.42)),
   },
 });
 const sheet = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), sheetMat);
@@ -942,11 +969,144 @@ const I18N = {
 const T = k => I18N[LANG][k];
 
 /* =====================================================================
+   Capa: la luz del fondo cósmico (CMB)
+   Cada anillo es la luz liberada a los 380.000 años que llega a la Vía Láctea
+   en un momento dado (hoy, antes o después). Su distancia real en el tiempo t es
+   D(t) = a(t) · [η(t_llegada) − η(t)], con η el tiempo conforme del modelo.
+   ===================================================================== */
+const LT_REC = Math.log10(T_REC_S), A_REC = 10 ** laOfLt(LT_REC);
+const RING_DT = 1.6, RING_J = [-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4];
+const NRING = RING_J.length, TODAY_RING = RING_J.indexOf(0);
+const RING_TARR = RING_J.map(j => AGE_GYR + j * RING_DT);
+const RING_ETA = RING_TARR.map(tg => etaOfLt(Math.log10(tg * S_PER_GYR)));
+const ringD = (k, lt, a) => a * (RING_ETA[k] - etaOfLt(lt));          // Mpc reales
+const CMB_MAX = (() => { let d = 0, tg = 0; for (let i = 1; i <= 600; i++) { const t = AGE_GYR * i / 600, lt = Math.log10(t * S_PER_GYR); if (lt < LT_REC) continue; const v = ringD(TODAY_RING, lt, 10 ** laOfLt(lt)); if (v > d) { d = v; tg = t; } } return { d, tg }; })();
+function cmbPhase(C) {
+  const tg = C.t / S_PER_GYR;
+  if (C.lt < LT_REC) return 0;
+  if (C.t < 1.5e6 * S_PER_YR) return 1;
+  if (tg < CMB_MAX.tg) return 2;
+  if (tg < AGE_GYR - 0.25) return 3;
+  return 4;
+}
+// color de la luz a medida que se estira: naranja → rojo → (invisible, color falso) → celeste de microondas
+const CMB_STOPS = [[0, [1.0, 0.80, 0.55]], [0.08, [1.0, 0.45, 0.22]], [0.2, [0.80, 0.18, 0.12]], [0.45, [0.45, 0.30, 0.55]], [0.75, [0.30, 0.62, 0.85]], [1, [0.35, 0.85, 1.0]]];
+function cmbColor(f) {
+  for (let i = 1; i < CMB_STOPS.length; i++) if (f <= CMB_STOPS[i][0]) {
+    const [f0, c0] = CMB_STOPS[i - 1], [f1, c1] = CMB_STOPS[i], k = (f - f0) / (f1 - f0);
+    return c0.map((v, j) => v + (c1[j] - v) * k);
+  }
+  return CMB_STOPS[CMB_STOPS.length - 1][1];
+}
+const WIEN = 2.897771955e-3;   // m·K
+function fmtWave(m) {
+  if (m < 1e-6) return `${sig(m * 1e9, 2)} nm`;
+  if (m < 1e-3) return `${sig(m * 1e6, 2)} µm`;
+  return `${sig(m * 1e3, 2)} mm`;
+}
+const bandOf = m => T('bands')[m < 3.8e-7 ? 0 : m < 7.5e-7 ? 1 : m < 1e-3 ? 2 : 3];
+
+// fotones: pequeñas ondas que apuntan hacia nosotros
+const PH_PER = 72;
+const phGeo = new THREE.BufferGeometry();
+phGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NRING * PH_PER * 3), 3));
+phGeo.setAttribute('aP', new THREE.BufferAttribute((() => { const a = new Float32Array(NRING * PH_PER * 3), r = mulberry32(2718); let n = 0; for (let k = 0; k < NRING; k++) for (let i = 0; i < PH_PER; i++) { a[n++] = (i + r() * 0.6) / PH_PER * Math.PI * 2 + k * 0.37; a[n++] = k; a[n++] = r(); } return a; })(), 3));
+const phMat = new THREE.ShaderMaterial({
+  uniforms: { uToday: U(TODAY_RING), uR: U(new Array(NRING).fill(0)), uA: U(new Array(NRING).fill(0)), uSize: U(26), uAspect: U(1), uWl: U(0.13), uCol: U(new THREE.Color()), uTime: U(0) },
+  vertexShader: `attribute vec3 aP; uniform float uR[${NRING}]; uniform float uA[${NRING}]; uniform float uSize; uniform float uAspect; uniform float uToday;
+    varying vec2 vDir; varying float vA; varying float vPh;
+    void main(){
+      int k = int(aP.y + 0.5); float R = uR[k];
+      vec4 clip = projectionMatrix * modelViewMatrix * vec4(cos(aP.x) * R, 0.0, sin(aP.x) * R, 1.0);
+      vec4 c0 = projectionMatrix * modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+      vec2 dir = (c0.xy / c0.w - clip.xy / clip.w) * vec2(uAspect, 1.0);
+      vDir = length(dir) > 1e-6 ? normalize(dir) : vec2(1.0, 0.0);
+      bool main_ = abs(aP.y - uToday) < 0.5;
+      vA = uA[k] * step(1e-9, R) * (main_ || aP.z < 0.33 ? 1.0 : 0.0); vPh = aP.z;
+      gl_Position = clip; gl_PointSize = uSize * (main_ ? 1.0 : 0.68);
+    }`,
+  fragmentShader: `uniform float uWl; uniform vec3 uCol; uniform float uTime; varying vec2 vDir; varying float vA; varying float vPh;
+    void main(){
+      vec2 p = gl_PointCoord * 2.0 - 1.0; p.y = -p.y;
+      vec2 n = vec2(-vDir.y, vDir.x); float u = dot(p, vDir), v = dot(p, n);
+      float env = exp(-u * u * 2.6) * step(abs(u), 1.0);
+      float wave = 0.22 * sin(6.2831853 * (u / uWl - uTime * 0.9 - vPh));
+      float a = (exp(-pow((v - wave) / 0.075, 2.0)) + 0.35 * exp(-pow((v - wave) / 0.22, 2.0))) * env * vA;
+      if (a < 0.004) discard;
+      gl_FragColor = vec4(uCol, a);
+    }`,
+  transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending,
+});
+const photons = new THREE.Points(phGeo, phMat); photons.frustumCulled = false; photons.visible = false; photons.renderOrder = 3; scene.add(photons);
+// el trazo fino de cada anillo
+const ringGeo = new THREE.BufferGeometry().setFromPoints(Array.from({ length: 360 }, (_, i) => new THREE.Vector3(Math.cos(i / 360 * Math.PI * 2), 0, Math.sin(i / 360 * Math.PI * 2))));
+const rings = RING_J.map(() => { const m = new THREE.LineLoop(ringGeo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending })); m.frustumCulled = false; m.visible = false; m.renderOrder = 2; scene.add(m); return m; });
+
+// regla del espectro
+function drawRuler(lam) {
+  const cv = document.getElementById('ruler'), dpr = Math.min(devicePixelRatio, 2), W = cv.clientWidth, H = cv.clientHeight;
+  if (!W) return;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+  const cs = getComputedStyle(document.documentElement), ink3 = cs.getPropertyValue('--ink-3'), heat = cs.getPropertyValue('--heat');
+  const X = m => (Math.log10(m) + 7) / 6 * W, y0 = 12, bh = 8;
+  const band = (m0, m1, fill) => { c.fillStyle = fill; c.fillRect(X(m0), y0, X(m1) - X(m0), bh); };
+  band(1e-7, 3.8e-7, '#4a3f7a');
+  const g = c.createLinearGradient(X(3.8e-7), 0, X(7.5e-7), 0);
+  ['#7a3cff', '#3c6cff', '#2ec4ff', '#3ddc6a', '#f4e23a', '#ff9a2e', '#ff3b2e'].forEach((col, i, arr) => g.addColorStop(i / (arr.length - 1), col));
+  band(3.8e-7, 7.5e-7, g);
+  const g2 = c.createLinearGradient(X(7.5e-7), 0, X(1e-3), 0); g2.addColorStop(0, '#6a1f1f'); g2.addColorStop(1, '#3a3346');
+  band(7.5e-7, 1e-3, g2);
+  band(1e-3, 1e-1, '#2f8fae');
+  const lb = T('rulerBands');
+  c.font = '10px "IBM Plex Mono", ui-monospace, monospace'; c.fillStyle = ink3; c.textBaseline = 'top';
+  c.textAlign = 'center'; c.fillText(lb[0], X(1.9e-7), y0 + bh + 5);
+  c.textAlign = 'left'; c.fillText(lb[1], X(3.8e-7), y0 + bh + 5);
+  c.textAlign = 'center'; c.fillText(lb[2], X(2.7e-5), y0 + bh + 5); c.fillText(lb[3], X(1e-2), y0 + bh + 5);
+  const x = Math.min(Math.max(X(lam), 3), W - 3);
+  c.strokeStyle = heat; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x, y0 - 2); c.lineTo(x, y0 + bh + 2); c.stroke();
+  c.fillStyle = heat; c.beginPath(); c.moveTo(x - 4.5, y0 - 9); c.lineTo(x + 4.5, y0 - 9); c.lineTo(x, y0 - 2); c.closePath(); c.fill();
+}
+
+// textos de la capa
+Object.assign(I18N.es, {
+  cmbBtn: 'Fondo cósmico', usLbl: 'Nosotros<small>(Vía Láctea)</small>',
+  cmbTodayLbl: 'La luz que nos llega hoy', cmbMoreLbl: 'Más luz en camino<small>desde más lejos</small>',
+  bands: ['ultravioleta', 'visible', 'infrarrojo', 'microondas'], rulerBands: ['UV', 'visible', 'infrarrojo', 'microondas'],
+  wl: (l, b) => `Pico de esa luz: ${l} · ${b}`,
+  cmbPh: [
+    [() => 'Antes de los 380.000 años', 'Todavía opaco', () => 'La luz rebota sin parar en el plasma y no puede viajar. A los 380.000 años se va a liberar.'],
+    [() => '380.000 años', 'Se libera la luz', D => `El universo se vuelve transparente en todas partes a la vez y cada punto suelta luz en todas direcciones. El anillo marcado es la luz que nos llega hoy: sale a ${D} de nosotros.`],
+    [t => t, 'Viene hacia nosotros… y se aleja', D => `El espacio se estira más rápido de lo que esa luz avanza: ya está a ${D} y todavía se aleja.`],
+    [t => t, 'Ahora sí se acerca', D => `La expansión se frenó lo suficiente: esa luz está a ${D} y se acerca. Detrás viene más luz, desde más lejos.`],
+    [() => 'Hoy', 'Llega: el fondo cósmico', () => 'Viajó 13.800 millones de años y su onda se estiró unas 1.100 veces: de luz casi visible a microondas. Mañana llega la de un poco más lejos, y así siempre.'],
+  ],
+});
+Object.assign(I18N.en, {
+  cmbBtn: 'Cosmic background', usLbl: 'Us<small>(Milky Way)</small>',
+  cmbTodayLbl: 'The light reaching us today', cmbMoreLbl: 'More light on the way<small>from farther out</small>',
+  bands: ['ultraviolet', 'visible', 'infrared', 'microwaves'], rulerBands: ['UV', 'visible', 'infrared', 'microwaves'],
+  wl: (l, b) => `Peak of this light: ${l} · ${b}`,
+  cmbPh: [
+    [() => 'Before 380,000 years', 'Still opaque', () => 'Light keeps bouncing around in the plasma and cannot travel. At 380,000 years it will break free.'],
+    [() => '380,000 years', 'Light breaks free', D => `The universe becomes transparent everywhere at once, and every point releases light in all directions. The highlighted ring is the light reaching us today: it starts ${D} away.`],
+    [t => t, 'Heading our way… and receding', D => `Space stretches faster than this light advances: it is already ${D} away and still receding.`],
+    [t => t, 'Now it closes in', D => `The expansion has slowed enough: this light is ${D} away and approaching. More light is coming behind it, from farther away.`],
+    [() => 'Today', 'It arrives: the cosmic background', () => 'It traveled for 13.8 billion years and its wave stretched about 1,100 times: from nearly visible light to microwaves. Tomorrow, light from a little farther away arrives, and so on forever.'],
+  ],
+});
+I18N.es.notesBody = I18N.es.notesBody.replace('</ul>', '  <li>Capa “Fondo cósmico”: cada anillo es luz liberada a los 380.000 años que llega a nosotros en un momento distinto; su distancia sale del modelo. En 3D serían esferas. Los fotones son simbólicos: su onda se estira con el universo y, pasado el rojo, se dibujan en color falso.</li>\n  </ul>');
+I18N.en.notesBody = I18N.en.notesBody.replace('</ul>', '  <li>“Cosmic background” layer: each ring is light released at 380,000 years that reaches us at a different moment; its distance comes from the model. In 3D they would be spheres. The photons are symbolic: their wave stretches with the universe and, beyond red, they are drawn in false color.</li>\n  </ul>');
+Object.assign(L, {
+  us: mkLabel('mw', ''), cmbToday: mkLabel('obs', ''), cmbMore: mkLabel('cmb', ''),
+});
+
+/* =====================================================================
    7. Estado, interfaz y bucle
    ===================================================================== */
 const $ = id => document.getElementById(id);
 const slider = $('slider'), card = $('card'), bar = $('bar');
-const ST = { x: 0, playing: !REDUCED, wait: REDUCED ? 0 : 1.6, rate: 1 / 56, dragging: false, labels: true, clock: 0 };
+const ST = { x: 0, playing: !REDUCED, wait: REDUCED ? 0 : 1.6, rate: 1 / 56, dragging: false, labels: true, clock: 0, cmb: false, cmbA: 0 };
 const C_MPC_S = 299792.458 / KM_PER_MPC;
 const CHI_P = (() => { let s = 0; const n = 4000, d = (0 - LA_MIN) / n * Math.LN10; for (let i = 0; i < n; i++) { const a = 10 ** (LA_MIN + (0 - LA_MIN) * (i + 0.5) / n); s += C_MPC_S / (a * H0s * Math.sqrt(E2(a))) * d; } return s; })();
 const ss = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); };
@@ -971,6 +1131,20 @@ addEventListener('keydown', e => {
 $('lblBtn').addEventListener('click', () => { ST.labels = !ST.labels; $('lblBtn').setAttribute('aria-pressed', String(ST.labels)); $('labels').style.display = ST.labels ? '' : 'none'; });
 const toggleNotes = () => { const n = $('notes'), open = n.hidden; n.hidden = !open; $('notesBtn').setAttribute('aria-expanded', String(open)); $('notesBtn2').setAttribute('aria-expanded', String(open)); };
 $('notesBtn').addEventListener('click', toggleNotes); $('notesBtn2').addEventListener('click', toggleNotes);
+// capa del fondo cósmico: zoom a escala de miles de millones de años luz
+const CAM_N = { d: 45.5, phi: 1.137 }, CAM_C = { d: 30000, phi: 0.74 };
+const sphT = new THREE.Spherical(), offT = new THREE.Vector3(), cmbCol = new THREE.Color();
+let camTw = null, curPh = -1;
+function tweenCam(to) { offT.copy(camera.position).sub(controls.target); sphT.setFromVector3(offT); camTw = { k: 0, d0: sphT.radius, p0: sphT.phi, d1: to.d, p1: to.phi }; }
+function setCmb(on) {
+  ST.cmb = on;
+  document.querySelectorAll('.cmbBtn').forEach(b => b.setAttribute('aria-pressed', String(on)));
+  $('epBox').hidden = on; $('cmbBox').hidden = !on; curPh = -1; roT = 0;
+  controls.maxDistance = on ? 120000 : 600;
+  tweenCam(on ? { d: CAM_C.d * Math.min(2.6, Math.max(1, 1.6 / (innerWidth / innerHeight))), phi: CAM_C.phi } : CAM_N);
+  if (!on && curEp >= 0) setEpoch(curEp);
+}
+document.querySelectorAll('.cmbBtn').forEach(b => b.addEventListener('click', () => setCmb(!ST.cmb)));
 $('moreBtn').addEventListener('click', () => { const o = card.classList.toggle('open'); $('moreBtn').setAttribute('aria-expanded', String(o)); $('moreBtn').textContent = o ? T('hide') : T('more'); setTimeout(applyViewOffset, 0); });
 
 // marcas y colores de la línea de tiempo
@@ -1051,8 +1225,8 @@ function frame(now) {
   su.uGridA.value = 0.95 - 0.45 * ss(ltYr(5e7), ltYr(2e9), lt);
   su.uPlasma.value = 0.42 * ss(-36.5, -35, lt) * (1 - ss(Math.log10(T_REC_S), ltYr(4e7), lt));
   su.uGrowth.value = Math.pow(Math.min(growthD(C.a) / D_TODAY, 1), 0.6);
-  su.uWebA.value = 0.9 * ss(ltYr(2e7), ltYr(3e8), lt);
-  su.uGalA.value = ss(ltYr(1.2e8), ltYr(1.3e9), lt);
+  su.uWebA.value = 0.9 * ss(ltYr(2e7), ltYr(3e8), lt) * (1 - 0.7 * ST.cmbA);
+  su.uGalA.value = ss(ltYr(1.2e8), ltYr(1.3e9), lt) * (1 - 0.6 * ST.cmbA);
   su.uIon.value = ss(ltYr(1.5e8), ltYr(1.0e9), lt);
   su.uIonA.value = ss(ltYr(1.2e8), ltYr(2.0e8), lt) * (1 - ss(ltYr(8e8), ltYr(1.5e9), lt));
   su.uFogK.value = (0.05 + 0.35 * xe) / Math.max(camDist, 1e-3);
@@ -1074,17 +1248,52 @@ function frame(now) {
     lu.uAlpha.value = lgA; lu.uDM.value = 0.17 - 0.09 * ss(2, 8, tg); lu.uBar.value = 0.42;
     const occ = ss(0.25, 1.0, mI); lu.uOcc.value = occ * 0.85; lu.uInk.value = occ * 0.6;
   }
+  // ---- capa del fondo cósmico ----
+  ST.cmbA += ((ST.cmb ? 1 : 0) - ST.cmbA) * (1 - Math.exp(-dt * 3));
+  const pu = phMat.uniforms, cmbOn = ST.cmbA > 0.01;
+  const ppv0 = (innerHeight + 2 * Math.abs(vo.dy)) / (2 * camDist * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
+  photons.visible = cmbOn && C.lt >= LT_REC;
+  if (cmbOn) {
+    const f = C.lt < LT_REC ? 0 : Math.min(1, Math.max(0, Math.log(C.a / A_REC) / Math.log(1 / A_REC)));
+    const cc = cmbColor(f); cmbCol.setRGB(cc[0], cc[1], cc[2], THREE.SRGBColorSpace);
+    pu.uCol.value.copy(cmbCol).multiplyScalar(1.5); pu.uWl.value = 0.13 + 0.6 * f; pu.uTime.value = ST.clock;
+    pu.uAspect.value = innerWidth / innerHeight; pu.uSize.value = 26 * renderer.getPixelRatio();
+    for (let k = 0; k < NRING; k++) {
+      let R = 0, A = 0;
+      if (C.lt >= LT_REC && tg < RING_TARR[k]) { R = ringD(k, C.lt, C.a) * VU_PER_MPC; A = k === TODAY_RING ? 1 : k < TODAY_RING ? 0.3 : Math.max(0.12, 0.42 - 0.08 * (k - TODAY_RING - 1)); }
+      pu.uR.value[k] = R; pu.uA.value[k] = A * ST.cmbA * ss(10, 40, R * ppv0);
+      const rg = rings[k]; rg.visible = R > 0 && A > 0; rg.scale.set(Math.max(R, 1e-6), 1, Math.max(R, 1e-6));
+      rg.material.color.copy(cmbCol).multiplyScalar(k === TODAY_RING ? 0.95 : 0.32); rg.material.opacity = A * ST.cmbA;
+    }
+    su.uRip.value = C.lt >= LT_REC && C.lt < LT_REC + 0.5 ? (C.lt - LT_REC) / 0.5 : -1;
+    su.uRipCell.value = camDist * 0.11; su.uRipCol.value.setRGB(0.5 * ST.cmbA, 0.36 * ST.cmbA, 0.22 * ST.cmbA);
+  } else { rings.forEach(r => { r.visible = false; }); su.uRip.value = -1; }
+  if (camTw) {
+    camTw.k = Math.min(1, camTw.k + dt / (REDUCED ? 0.01 : 2.4));
+    const e = camTw.k < 0.5 ? 4 * camTw.k ** 3 : 1 - (-2 * camTw.k + 2) ** 3 / 2;
+    offT.copy(camera.position).sub(controls.target); sphT.setFromVector3(offT);
+    sphT.radius = Math.exp(Math.log(camTw.d0) + (Math.log(camTw.d1) - Math.log(camTw.d0)) * e); sphT.phi = camTw.p0 + (camTw.p1 - camTw.p0) * e;
+    camera.position.copy(controls.target).add(offT.setFromSpherical(sphT));
+    if (camTw.k >= 1) camTw = null;
+  }
+  { const cd = camera.position.distanceTo(controls.target), nf = Math.max(40000, cd * 900), nn = Math.max(0.02, cd * 0.0005);
+    if (Math.abs(camera.far - nf) / nf > 0.02 || Math.abs(camera.near - nn) / nn > 0.02) { camera.far = nf; camera.near = nn; camera.updateProjectionMatrix(); } }
   controls.update();
   // ---- etiquetas ----
   const fh = innerHeight + 2 * Math.abs(vo.dy), pxPerVu = fh / (2 * camDist * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
   const obsPx = obsR * pxPerVu, sepVu = C.spec ? 0 : sepPhys(tg) * VU_PER_MPC;
-  setLbl(L.here, obsPx < 28, V3(0, 0, 0), T('lblHere'));
-  setLbl(L.obs, obsPx >= 28 && obsR < 420, V3(0, 0, -obsR), T('lblObs'));
+  const cm = ST.cmb;
+  setLbl(L.here, !cm && obsPx < 28, V3(0, 0, 0), T('lblHere'));
+  setLbl(L.obs, !cm && obsPx >= 28 && obsR < 420, V3(0, 0, -obsR), T('lblObs'));
   const early = tg < 1.3;
-  setLbl(L.mw, lgA > 0.6 && obsPx >= 28, V3(0, 0.15, 0), early ? T('lblMwEarly') : T('lblMw'));
-  setLbl(L.m31, lgA > 0.6 && sepVu * pxPerVu > 34, V3(sepVu, 0.15, 0), early ? T('lblM31Early') : T('lblM31'));
+  setLbl(L.mw, !cm && lgA > 0.6 && obsPx >= 28, V3(0, 0.15, 0), early ? T('lblMwEarly') : T('lblMw'));
+  setLbl(L.m31, !cm && lgA > 0.6 && sepVu * pxPerVu > 34, V3(sepVu, 0.15, 0), early ? T('lblM31Early') : T('lblM31'));
   if (L.m31.visible) { const nx = L.m31.position.clone().project(camera).x, flip = (nx + 1) / 2 * innerWidth + L.m31.element.offsetWidth > innerWidth - 10; L.m31.center.set(flip ? 1 : 0, 1); L.m31.element.classList.toggle('l', flip); L.m31.element.classList.toggle('r', !flip); }
-  if (tg > SUN_T && camDist < 6) { const sp = SUN_F.clone().applyMatrix3(GALS[0].rot).multiplyScalar(VU_PER_MPC); setLbl(L.sol, true, sp, T('lblSol')); } else setLbl(L.sol, false);
+  setLbl(L.us, cm && ST.cmbA > 0.5, V3(0, 0, 0), T('usLbl'));
+  const Rt = pu.uR.value[TODAY_RING], Ro = pu.uR.value[TODAY_RING + 1];
+  setLbl(L.cmbToday, cm && Rt * pxPerVu > 45, V3(0, 0, -Rt), T('cmbTodayLbl'));
+  setLbl(L.cmbMore, cm && Ro > 0 && Ro * pxPerVu > 90 && (Ro - Rt) * pxPerVu > 40, V3(Ro * 0.6, 0, -Ro * 0.8), T('cmbMoreLbl'));
+  if (!cm && tg > SUN_T && camDist < 6) { const sp = SUN_F.clone().applyMatrix3(GALS[0].rot).multiplyScalar(VU_PER_MPC); setLbl(L.sol, true, sp, T('lblSol')); } else setLbl(L.sol, false);
   // ---- lecturas ----
   roT -= dt;
   if (roT <= 0) {
@@ -1095,6 +1304,15 @@ function frame(now) {
     $('tdot').style.background = `rgb(${(C.spec ? [0.85, 0.8, 1] : bb(C.T)).map(v => Math.round(255 * v * (0.12 + 0.88 * k))).join(',')})`;
     $('robs').textContent = C.spec ? T('modelDep') : T('radius')(fmtMpc(CHI_P * C.a));
     $('rsep').textContent = C.spec ? '—' : fmtMpc(sepPhys(tg));
+    if (ST.cmb) {
+      const ph = cmbPhase(C), P = T('cmbPh')[ph];
+      const Dm = ph === 1 ? fmtMpc(ringD(TODAY_RING, LT_REC, A_REC)) : C.lt >= LT_REC ? fmtMpc(ringD(TODAY_RING, C.lt, C.a)) : '';
+      $('cWhen').textContent = P[0](fmtTime(C.t)); $('cTitle').textContent = P[1]; $('cText').textContent = P[2](Dm);
+      const lam = C.spec ? 1e-7 : WIEN / C.T;
+      $('cWl').textContent = C.spec ? '' : T('wl')(fmtWave(lam), bandOf(lam));
+      drawRuler(lam);
+      if (ph !== curPh) { curPh = ph; if (!REDUCED && $('epoch').animate) $('epoch').animate([{ opacity: 0.2, transform: 'translateY(5px)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' }); }
+    }
   }
   composer.render();
   labelRenderer.render(scene, camera);
@@ -1109,7 +1327,7 @@ function setLang(l) {
   document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', T(el.dataset.i18nAria)));
   document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
   $('moreBtn').textContent = card.classList.contains('open') ? T('hide') : T('more');
-  renderTicks(); updatePlay(); lblText.clear(); roT = 0;
+  renderTicks(); updatePlay(); lblText.clear(); roT = 0; curPh = -1;
   if (curEp >= 0) setEpoch(curEp, true);
   setTimeout(applyViewOffset, 0);
 }

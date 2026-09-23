@@ -21,6 +21,7 @@ Una animación interactiva en 3D (three.js) que responde una pregunta: **¿el Bi
 - **Un recuadro explica brevemente cada época**, desde la era de Planck hasta hoy.
 - **Tres datos en vivo:** la temperatura, el tamaño de todo lo que hoy vemos y la distancia Vía Láctea ↔ Andrómeda.
 - **Es bilingüe:** español por defecto e inglés, con el botón `ES | EN` o con `?lang=en`.
+- **Capa "Fondo cósmico" (botón arriba a la derecha).** Muestra la luz liberada a los 380.000 años que todavía nos llega: nace a 41 millones de años luz, se aleja hasta 5.850 millones de años luz porque el espacio se estira más rápido de lo que ella avanza, y recién después vuelve y llega hoy. Detrás siempre viene más luz, desde más lejos. Una regla del espectro muestra cómo su onda se estira de ~1 µm a ~1 mm (microondas).
 
 ### Cómo verlo localmente
 
@@ -73,6 +74,7 @@ An interactive 3D animation (three.js) that answers one question: **was the Big 
 - **A small box briefly explains each epoch**, from the Planck era to today.
 - **Three live readouts:** the temperature, the size of everything we see today, and the Milky Way ↔ Andromeda distance.
 - **It is bilingual:** Spanish by default and English, via the `ES | EN` toggle or `?lang=en`.
+- **"Cosmic background" layer (button at the top right).** It shows the light released at 380,000 years that still reaches us: it starts 41 million light-years away, recedes to 5.85 billion light-years because space stretches faster than it advances, and only then turns back and arrives today. More light keeps coming behind it, from farther away. A spectrum ruler shows its wave stretching from ~1 µm to ~1 mm (microwaves).
 
 ### Run it locally
 
