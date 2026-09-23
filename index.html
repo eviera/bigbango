@@ -71,8 +71,17 @@ a { color: var(--heat); text-underline-offset: 2px; }
 #ruler { display: block; width: 100%; height: 40px; margin: 12px 0 0; }
 #epoch .wl { font-family: var(--mono); font-size: 11px; color: var(--ink-2); margin: 2px 0 0; }
 #cmbBox .when { color: #9fe3ff; }
-.btn.cmbBtn[aria-pressed="false"] { color: var(--ink); }
-.btn.cmbBtn[aria-pressed="true"] { background: rgba(63, 182, 214, .22); border-color: rgba(120, 210, 240, .75); color: #d4f4ff; }
+.btn.cmbBtn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px 8px 13px; font-size: 12.5px; font-weight: 500; color: #dff6ff;
+  background: linear-gradient(135deg, rgba(47, 143, 174, .55), rgba(63, 182, 214, .28)); border-color: rgba(143, 223, 250, .8);
+  box-shadow: 0 0 0 1px rgba(143, 223, 250, .15), 0 0 18px rgba(63, 182, 214, .35); }
+.btn.cmbBtn:hover { background: linear-gradient(135deg, rgba(47, 143, 174, .75), rgba(63, 182, 214, .45)); }
+.btn.cmbBtn .ic { color: #9fe3ff; font-size: 13px; line-height: 1; }
+.btn.cmbBtn[aria-pressed="false"] { color: #dff6ff; }
+.btn.cmbBtn[aria-pressed="true"] { background: #bfefff; color: #06202b; border-color: #bfefff; box-shadow: 0 0 22px rgba(120, 210, 240, .55); }
+.btn.cmbBtn[aria-pressed="true"] .ic { color: #0b5f7a; }
+.btn.cmbBtn.nudge { animation: nudge 2.4s ease-in-out infinite; }
+@keyframes nudge { 0%, 100% { box-shadow: 0 0 0 1px rgba(143, 223, 250, .15), 0 0 14px rgba(63, 182, 214, .3); } 50% { box-shadow: 0 0 0 4px rgba(143, 223, 250, .22), 0 0 30px rgba(63, 182, 214, .7); } }
+@media (prefers-reduced-motion: reduce) { .btn.cmbBtn.nudge { animation: none; } }
 
 #tools { position: fixed; z-index: 5; top: calc(var(--gut) + env(safe-area-inset-top, 0px)); right: var(--gut); display: flex; gap: 8px; }
 .btn { border: 1px solid rgba(239,231,214,.24); background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 999px; padding: 7px 13px; font-family: var(--mono); font-size: 12px; cursor: pointer; }
@@ -123,6 +132,7 @@ a { color: var(--heat); text-underline-offset: 2px; }
   #card .more p { font-size: 13.5px; }
   .btnrow { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 0 0 8px; }
   .btnrow .btn, .btnrow .seg button { padding: 5px 10px; font-size: 11.5px; }
+  .btnrow .btn.cmbBtn { flex: 1 0 100%; justify-content: center; padding: 8px 12px; font-size: 12.5px; }
   #epoch { left: var(--gut); right: var(--gut); width: auto; padding: 9px 13px 10px; }
   #epoch .when { font-size: 10px; margin-bottom: 3px; }
   #epoch h2 { font-size: 16px; margin-bottom: 3px; }
@@ -156,7 +166,7 @@ addEventListener("error", function (e) { var l = document.getElementById("loadin
   <p class="eyebrow" data-i18n="eyebrow">Del Big Bang a hoy</p>
   <h1 data-i18n="h1">¿El Big Bang fue un punto?</h1>
   <p class="lede" data-i18n-html="lede">No. Fue un estado denso y caliente en <em>todo</em> el espacio a la vez. El plano es ese espacio: infinito, sin borde y sin centro.</p>
-  <div class="btnrow"><button class="btn" id="moreBtn" aria-expanded="false">¿Qué estoy viendo?</button><button class="btn cmbBtn" aria-pressed="false" data-i18n="cmbBtn">Fondo cósmico</button><button class="btn" id="notesBtn2" aria-controls="notes" data-i18n="notes">Notas</button><div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
+  <div class="btnrow"><button class="btn cmbBtn nudge" aria-pressed="false"><span class="ic" aria-hidden="true">✦</span><span data-i18n="cmbBtn">Luz del fondo cósmico</span></button><button class="btn" id="moreBtn" aria-expanded="false">¿Qué estoy viendo?</button><button class="btn" id="notesBtn2" aria-controls="notes" data-i18n="notes">Notas</button><div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
   <div class="more">
     <p data-i18n-html="more1">La cuadrícula se estira en todas partes y cada cuadro se divide en otros más chicos que vuelven a crecer. El <span class="k-obs">círculo verde</span> encierra todo lo que hoy podemos ver: al principio era diminuto, pero alrededor había más universo, igual de denso.</p>
     <p data-i18n-html="more2">En el centro, la materia de la futura <span class="k-mw">Vía Láctea</span> (con los átomos de la Tierra) y, al lado, la de <span class="k-m31">Andrómeda</span>. La expansión las separó, la gravedad las frenó y hoy se acercan.</p>
@@ -169,8 +179,8 @@ addEventListener("error", function (e) { var l = document.getElementById("loadin
 </section>
 
 <div id="tools">
+  <button class="btn cmbBtn nudge" aria-pressed="false"><span class="ic" aria-hidden="true">✦</span><span data-i18n="cmbBtn">Luz del fondo cósmico</span></button>
   <button class="btn" id="lblBtn" aria-pressed="true" data-i18n="labels">Etiquetas</button>
-  <button class="btn cmbBtn" aria-pressed="false" data-i18n="cmbBtn">Fondo cósmico</button>
   <button class="btn" id="notesBtn" aria-expanded="false" aria-controls="notes" data-i18n="notes">Notas</button>
   <div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div>
 </div>
@@ -1070,7 +1080,7 @@ function drawRuler(lam) {
 
 // textos de la capa
 Object.assign(I18N.es, {
-  cmbBtn: 'Fondo cósmico', usLbl: 'Nosotros<small>(Vía Láctea)</small>',
+  cmbBtn: 'Luz del fondo cósmico', usLbl: 'Nosotros<small>(Vía Láctea)</small>',
   cmbTodayLbl: 'La luz que nos llega hoy', cmbMoreLbl: 'Más luz en camino<small>desde más lejos</small>',
   bands: ['ultravioleta', 'visible', 'infrarrojo', 'microondas'], rulerBands: ['UV', 'visible', 'infrarrojo', 'microondas'],
   wl: (l, b) => `Pico de esa luz: ${l} · ${b}`,
@@ -1083,7 +1093,7 @@ Object.assign(I18N.es, {
   ],
 });
 Object.assign(I18N.en, {
-  cmbBtn: 'Cosmic background', usLbl: 'Us<small>(Milky Way)</small>',
+  cmbBtn: 'Cosmic background light', usLbl: 'Us<small>(Milky Way)</small>',
   cmbTodayLbl: 'The light reaching us today', cmbMoreLbl: 'More light on the way<small>from farther out</small>',
   bands: ['ultraviolet', 'visible', 'infrared', 'microwaves'], rulerBands: ['UV', 'visible', 'infrared', 'microwaves'],
   wl: (l, b) => `Peak of this light: ${l} · ${b}`,
@@ -1144,7 +1154,12 @@ function setCmb(on) {
   tweenCam(on ? { d: CAM_C.d * Math.min(2.6, Math.max(1, 1.6 / (innerWidth / innerHeight))), phi: CAM_C.phi } : CAM_N);
   if (!on && curEp >= 0) setEpoch(curEp);
 }
-document.querySelectorAll('.cmbBtn').forEach(b => b.addEventListener('click', () => setCmb(!ST.cmb)));
+document.querySelectorAll('.cmbBtn').forEach(b => b.addEventListener('click', () => {
+  setCmb(!ST.cmb);
+  document.querySelectorAll('.cmbBtn').forEach(x => x.classList.remove('nudge'));
+  try { localStorage.setItem('bb-cmb-seen', '1'); } catch (e) {}
+}));
+try { if (localStorage.getItem('bb-cmb-seen')) document.querySelectorAll('.cmbBtn').forEach(x => x.classList.remove('nudge')); } catch (e) {}
 $('moreBtn').addEventListener('click', () => { const o = card.classList.toggle('open'); $('moreBtn').setAttribute('aria-expanded', String(o)); $('moreBtn').textContent = o ? T('hide') : T('more'); setTimeout(applyViewOffset, 0); });
 
 // marcas y colores de la línea de tiempo
