@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>¿El Big Bang fue un punto?</title>
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Una sola pantalla: el espacio infinito que se expande desde el Big Bang, y dónde estaba la materia de la Vía Láctea y de Andrómeda.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --void: #04050b;
+  --glass: rgba(8, 10, 20, 0.72);
+  --edge: rgba(239, 231, 214, 0.10);
+  --ink: #efe7d6;
+  --ink-2: #c3bccd;
+  --ink-3: #8d889d;
+  --rule: rgba(239, 231, 214, 0.14);
+  --heat: #ffb46b;
+  --mw: #86c9ff;
+  --m31: #f0a8ff;
+  --obs: #8ff0cf;
+  --serif: "STIX Two Text", "STIX Two", "Times New Roman", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --gut: 20px;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; overflow: hidden; background: var(--void); color: var(--ink); font-family: var(--serif); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; }
+a { color: var(--heat); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--heat); outline-offset: 2px; }
+#stage { position: fixed; inset: 0; }
+#stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+#labels { position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+#vignette { position: fixed; inset: 0; pointer-events: none; z-index: 1; background: radial-gradient(ellipse at 60% 45%, transparent 55%, rgba(2, 3, 8, 0.55) 100%); }
+
+.lbl { font-family: var(--mono); font-size: 11.5px; letter-spacing: .02em; color: var(--ink); white-space: nowrap; padding-bottom: 12px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 14px rgba(0,0,0,.8); }
+.lbl::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 1px; height: 10px; background: currentColor; opacity: .6; }
+.lbl .t { display: inline-block; background: rgba(4, 5, 11, 0.62); padding: 3px 7px; border-radius: 5px; }
+.lbl small { display: block; color: var(--ink-2); font-size: 10.5px; }
+.lbl.l::after { left: auto; right: 0; } .lbl.r::after { left: 0; }
+.lbl.l { text-align: right; } .lbl.r { text-align: left; }
+.lbl.mw { color: var(--mw); } .lbl.m31 { color: var(--m31); } .lbl.obs { color: var(--obs); } .lbl.sol { color: #ffd97a; }
+.lbl.below { padding-bottom: 0; padding-top: 14px; } .lbl.below::after { bottom: auto; top: 0; height: 12px; }
+
+#card {
+  position: fixed; z-index: 4; left: var(--gut); top: calc(var(--gut) + env(safe-area-inset-top, 0px));
+  width: min(360px, calc(100vw - 2 * var(--gut))); padding: 18px 20px 16px;
+  background: var(--glass); border: 1px solid var(--edge); border-radius: 14px;
+  backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+#card .eyebrow { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--heat); margin: 0 0 8px; }
+#card h1 { font-size: 31px; line-height: 1.08; font-weight: 500; font-style: italic; margin: 0 0 10px; text-wrap: balance; }
+#card .lede { font-size: 16.5px; line-height: 1.45; margin: 0 0 12px; }
+#card .more p { font-size: 14.5px; line-height: 1.5; color: var(--ink-2); margin: 0 0 10px; }
+#card .k-obs { color: var(--obs); } #card .k-mw { color: var(--mw); } #card .k-m31 { color: var(--m31); }
+#live { display: grid; gap: 5px; border-top: 1px solid var(--rule); padding-top: 11px; margin-top: 4px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
+#live div { display: flex; justify-content: space-between; gap: 12px; }
+#live b { color: var(--ink); font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; }
+#live .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; vertical-align: 0; }
+.btnrow { display: none; }
+#epoch { position: fixed; z-index: 4; right: var(--gut); bottom: 128px; width: min(310px, calc(100vw - 2 * var(--gut))); padding: 13px 16px 14px;
+  background: var(--glass); border: 1px solid var(--edge); border-radius: 12px; backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); }
+#epoch .when { font-family: var(--mono); font-size: 11px; letter-spacing: .03em; color: var(--heat); margin: 0 0 5px; }
+#epoch h2 { font-size: 19px; line-height: 1.15; font-style: italic; font-weight: 500; margin: 0 0 6px; text-wrap: balance; }
+#epoch .txt { font-size: 14px; line-height: 1.45; color: var(--ink-2); margin: 0; }
+
+#tools { position: fixed; z-index: 5; top: calc(var(--gut) + env(safe-area-inset-top, 0px)); right: var(--gut); display: flex; gap: 8px; }
+.btn { border: 1px solid rgba(239,231,214,.24); background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 999px; padding: 7px 13px; font-family: var(--mono); font-size: 12px; cursor: pointer; }
+.btn:hover { background: rgba(30, 32, 46, .85); }
+.btn[aria-pressed="false"] { color: var(--ink-3); }
+.seg { display: inline-flex; border: 1px solid rgba(239,231,214,.24); border-radius: 999px; overflow: hidden; background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.seg button { border: 0; background: transparent; padding: 7px 11px; font-family: var(--mono); font-size: 12px; cursor: pointer; color: var(--ink-3); }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #0b0c14; }
+#notes { position: fixed; z-index: 6; top: calc(var(--gut) + 44px + env(safe-area-inset-top, 0px)); right: var(--gut); width: min(430px, calc(100vw - 2 * var(--gut))); max-height: calc(100% - 210px); overflow-y: auto;
+  background: rgba(9, 11, 21, 0.94); border: 1px solid var(--edge); border-radius: 14px; padding: 16px 18px; font-size: 14px; line-height: 1.5; color: var(--ink-2); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+#notes h2 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--heat); margin: 0 0 8px; }
+#notes h2:not(:first-child) { margin-top: 14px; }
+#notes p { margin: 0 0 8px; } #notes ul { margin: 0 0 8px; padding-left: 18px; } #notes li { margin-bottom: 5px; }
+#notes strong { color: var(--ink); font-weight: 600; }
+
+#bar {
+  position: fixed; z-index: 4; left: var(--gut); right: var(--gut); bottom: calc(var(--gut) + env(safe-area-inset-bottom, 0px));
+  background: var(--glass); border: 1px solid var(--edge); border-radius: 14px; padding: 10px 18px 8px 12px;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; align-items: center;
+}
+#play { grid-row: 1 / span 2; width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,180,107,.6); background: rgba(255,180,107,.1); color: var(--heat); cursor: pointer; font-size: 15px; display: grid; place-items: center; }
+#play:hover { background: rgba(255,180,107,.2); }
+#now { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; min-width: 0; }
+#rt { font-size: 22px; font-style: italic; font-variant-numeric: tabular-nums; }
+#track { position: relative; height: 38px; }
+#slider { position: absolute; left: 0; right: 0; top: 0; width: 100%; margin: 0; height: 20px; background: transparent; -webkit-appearance: none; appearance: none; cursor: pointer; z-index: 2; }
+#slider::-webkit-slider-runnable-track { height: 20px; background: transparent; }
+#slider::-moz-range-track { height: 20px; background: transparent; }
+#slider::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 20px; border-radius: 4px; background: var(--ink); border: 2px solid var(--void); box-shadow: 0 0 0 1px var(--ink), 0 0 16px rgba(255,180,107,.6); }
+#slider::-moz-range-thumb { width: 11px; height: 18px; border-radius: 4px; background: var(--ink); border: 2px solid var(--void); }
+#grad { position: absolute; left: 0; right: 0; top: 7px; height: 6px; border-radius: 3px; }
+#ticks { position: absolute; left: 0; right: 0; top: 20px; height: 18px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
+#ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; top: 3px; }
+#ticks span::before { content: ""; position: absolute; left: 50%; top: -5px; width: 1px; height: 4px; background: rgba(239,231,214,.28); }
+
+#loading { position: fixed; inset: 0; display: grid; place-items: center; z-index: 10; background: var(--void); font-family: var(--mono); font-size: 13px; color: var(--ink-2); transition: opacity .8s; padding: 0 24px; text-align: center; }
+#loading.done { opacity: 0; pointer-events: none; }
+
+@media (max-width: 760px) {
+  :root { --gut: 10px; }
+  #card { padding: 13px 15px 12px; }
+  #card h1 { font-size: 24px; margin-bottom: 6px; }
+  #card .lede { font-size: 14.5px; margin-bottom: 8px; }
+  #card .more { display: none; }
+  #card.open .more { display: block; }
+  #card .more p { font-size: 13.5px; }
+  .btnrow { display: flex; gap: 8px; margin: 0 0 8px; }
+  .btnrow .btn, .btnrow .seg button { padding: 5px 10px; font-size: 11.5px; }
+  #epoch { left: var(--gut); right: var(--gut); width: auto; padding: 9px 13px 10px; }
+  #epoch .when { font-size: 10px; margin-bottom: 3px; }
+  #epoch h2 { font-size: 16px; margin-bottom: 3px; }
+  #epoch .txt { font-size: 12.5px; line-height: 1.4; }
+  #live { font-size: 11px; }
+  #tools { display: none; }
+  #notes { top: 50%; bottom: auto; left: var(--gut); right: var(--gut); width: auto; transform: translateY(-50%); max-height: 70%; }
+  #rt { font-size: 18px; }
+  #ticks span.minor { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { #loading { transition: none; } }
+</style>
+</head>
+<body>
+
+<div id="stage" data-i18n-aria="stageAria" aria-label="El espacio como un plano infinito que se expande"></div>
+<div id="vignette"></div>
+<div id="labels"></div>
+<div id="loading" role="status">Preparando el universo…</div>
+<script>
+(function () { var l = 'es'; try { var q = new URLSearchParams(location.search).get('lang'), s = localStorage.getItem('bb-lang'); l = (q === 'en' || q === 'es') ? q : (s === 'en' ? 'en' : 'es'); } catch (e) {}
+  window.__BB_LANG = l; document.documentElement.lang = l;
+  if (l === 'en') { document.getElementById('loading').textContent = 'Preparing the universe…'; document.title = 'Was the Big Bang a point?'; } })();
+addEventListener("error", function (e) { var l = document.getElementById("loading"); if (l && !l.classList.contains("done")) l.textContent = window.__BB_LANG === 'en'
+  ? "Could not start the 3D view (" + (e.message || "error") + "). Try an up-to-date desktop browser with WebGL 2."
+  : "No se pudo iniciar la visualización 3D (" + (e.message || "error") + "). Probá con un navegador de escritorio actualizado con WebGL 2."; });
+</script>
+
+<section id="card" data-i18n-aria="cardAria" aria-label="Explicación">
+  <p class="eyebrow" data-i18n="eyebrow">Del Big Bang a hoy</p>
+  <h1 data-i18n="h1">¿El Big Bang fue un punto?</h1>
+  <p class="lede" data-i18n-html="lede">No. Fue un estado denso y caliente en <em>todo</em> el espacio a la vez. El plano es ese espacio: infinito, sin borde y sin centro.</p>
+  <div class="btnrow"><button class="btn" id="moreBtn" aria-expanded="false">¿Qué estoy viendo?</button><button class="btn" id="notesBtn2" aria-controls="notes" data-i18n="notes">Notas</button><div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
+  <div class="more">
+    <p data-i18n-html="more1">La cuadrícula se estira en todas partes y cada cuadro se divide en otros más chicos que vuelven a crecer. El <span class="k-obs">círculo verde</span> encierra todo lo que hoy podemos ver: al principio era diminuto, pero alrededor había más universo, igual de denso.</p>
+    <p data-i18n-html="more2">En el centro, la materia de la futura <span class="k-mw">Vía Láctea</span> (con los átomos de la Tierra) y, al lado, la de <span class="k-m31">Andrómeda</span>. La expansión las separó, la gravedad las frenó y hoy se acercan.</p>
+  </div>
+  <div id="live" aria-live="off">
+    <div><span><i class="dot" id="tdot"></i><span data-i18n="temp">Temperatura</span></span><b id="rtemp">—</b></div>
+    <div><span data-i18n="obs">Todo lo que hoy vemos medía</span><b id="robs">—</b></div>
+    <div><span data-i18n="sep">Vía Láctea ↔ Andrómeda</span><b id="rsep">—</b></div>
+  </div>
+</section>
+
+<div id="tools">
+  <button class="btn" id="lblBtn" aria-pressed="true" data-i18n="labels">Etiquetas</button>
+  <button class="btn" id="notesBtn" aria-expanded="false" aria-controls="notes" data-i18n="notes">Notas</button>
+  <div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div>
+</div>
+<aside id="notes" hidden data-i18n-html="notesBody" aria-label="Notas">
+  <h2>Qué es real y qué es dibujo</h2>
+  <ul>
+    <li>Las distancias, temperaturas y tiempos salen del modelo cosmológico estándar (ΛCDM, parámetros de Planck 2018). La cámara muestra distancias reales y fijas: el centro de la vista abarca unos 17 millones de años luz.</li>
+    <li>La cuadrícula es jerárquica (cada nivel mide el doble que el anterior) para que la expansión se vea a cualquier escala. Las manchas del plasma están exageradas; las reales eran de 1 parte en 100.000.</li>
+    <li>Antes de 10⁻³² s la imagen es simbólica: la inflación es una hipótesis y la era de Planck, física desconocida.</li>
+    <li>Red cósmica: aproximación de Zel'dovich. Vía Láctea y Andrómeda: colapso esférico y órbita del “argumento de tiempo”. Formas y orientaciones son ilustrativas.</li>
+  </ul>
+  <h2>Tu nota</h2>
+  <p><strong>Correcta en lo esencial:</strong> si hoy es infinito, siempre lo fue, y el Big Bang ocurrió en todas partes. Dos matices: “infinitamente denso” vale solo en el límite <em>t</em> → 0, donde la teoría deja de funcionar; y “sin bordes” no implica “infinito”: podría ser finito y sin bordes, como la superficie de una esfera.</p>
+  <h2>Fuentes</h2>
+  <ul>
+    <li>Planck Collaboration (2020), <em>A&amp;A</em> 641, A6. <a href="https://arxiv.org/abs/1807.06209" target="_blank" rel="noopener">arXiv:1807.06209</a></li>
+    <li>Davis y Lineweaver (2004), Expanding confusion. <a href="https://arxiv.org/abs/astro-ph/0310808" target="_blank" rel="noopener">arXiv:astro-ph/0310808</a></li>
+    <li>Kahn y Woltjer (1959), <em>ApJ</em> 130, 705 (argumento de tiempo).</li>
+    <li>Sawala et al. (2025), <em>Nature Astronomy</em>: ~50 % de probabilidad de choque con Andrómeda en 10.000 millones de años. <a href="https://www.nature.com/articles/s41550-025-02563-1" target="_blank" rel="noopener">doi</a></li>
+  </ul>
+</aside>
+
+<aside id="epoch" aria-live="polite" data-i18n-aria="epochAria" aria-label="Qué está pasando">
+  <p class="when" id="eWhen"></p>
+  <h2 id="eTitle"></h2>
+  <p class="txt" id="eText"></p>
+</aside>
+
+<div id="bar">
+  <button id="play" aria-label="Pausar">❚❚</button>
+  <div id="now"><span id="rt">—</span></div>
+  <div id="track">
+    <div id="grad"></div>
+    <input id="slider" type="range" min="0" max="10000" step="1" value="0" data-i18n-aria="sliderAria" aria-label="Tiempo desde el Big Bang">
+    <div id="ticks"></div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+/* =====================================================================
+   1. Modelo cosmológico ΛCDM plano (Planck 2018)
+   H0 = 67,4 km/s/Mpc · Ωm = 0,315 · Ωr con g*(T) · T0 = 2,7255 K
+   t(a) = ∫ da / (a H(a)), integrado numéricamente al cargar.
+   ===================================================================== */
+const H0 = 67.4, OM = 0.315, OR = 9.15e-5, OL = 1 - OM - OR, T0 = 2.7255;
+const KM_PER_MPC = 3.0856776e19, S_PER_YR = 3.15576e7, S_PER_GYR = 3.15576e16;
+const MPC_M = 3.0856776e22, M_PER_LY = 9.4607e15, M_PER_AU = 1.495979e11;
+const H0s = H0 / KM_PER_MPC;
+const RHO_C0 = 3 * H0s * H0s / (8 * Math.PI * 6.6743e-11);
+const KB_EV = 8.617333e-5;
+const T_INFL_END = 1e-32;   // s — fin (ilustrativo) de la inflación
+const T_PLANCK = 5.39e-44;  // s
+
+// grados de libertad relativistas g*(T) y g*s(T): [log10(T/eV), g*, g*s]
+const GT = [[-9,3.363,3.909],[4.7,3.363,3.909],[5.2,4.6,5.1],[5.7,8.4,8.8],[6.2,10.75,10.75],[7.9,10.75,10.75],[8.05,14.25,14.25],[8.2,17.25,17.25],[8.3,61.75,61.75],[9.1,72.25,72.25],[9.6,75.75,75.75],[10.6,86.25,86.25],[11.0,96.25,96.25],[11.3,106.75,106.75],[40,106.75,106.75]];
+function gAt(lT) {
+  if (lT <= GT[0][0]) return [GT[0][1], GT[0][2]];
+  for (let i = 1; i < GT.length; i++) if (lT <= GT[i][0]) {
+    const [x0, a0, b0] = GT[i - 1], [x1, a1, b1] = GT[i], f = (lT - x0) / (x1 - x0);
+    return [a0 + (a1 - a0) * f, b0 + (b1 - b0) * f];
+  }
+  return [106.75, 106.75];
+}
+function tempOfA(a) {
+  let T = T0 / a;
+  for (let k = 0; k < 3; k++) { const gs = gAt(Math.log10(T * KB_EV))[1]; T = (T0 / a) * Math.cbrt(3.909 / gs); }
+  return T;
+}
+function E2(a) {
+  const T = tempOfA(a), [g, gs] = gAt(Math.log10(T * KB_EV));
+  return OR * (g / 3.363) * Math.pow(3.909 / gs, 4 / 3) / (a * a * a * a) + OM / (a * a * a) + OL;
+}
+const LA_MIN = -30, LA_MAX = 0.3, NST = 12000;
+const LAt = new Float64Array(NST + 1), LTt = new Float64Array(NST + 1);
+(() => {
+  const dl = (LA_MAX - LA_MIN) / NST * Math.LN10;
+  let a = 10 ** LA_MIN, t = 1 / (2 * H0s * Math.sqrt(E2(a))), f0 = 1 / (H0s * Math.sqrt(E2(a)));
+  LAt[0] = LA_MIN; LTt[0] = Math.log10(t);
+  for (let i = 1; i <= NST; i++) {
+    const la = LA_MIN + (LA_MAX - LA_MIN) * i / NST; a = 10 ** la;
+    const f1 = 1 / (H0s * Math.sqrt(E2(a))); t += 0.5 * (f0 + f1) * dl; f0 = f1;
+    LAt[i] = la; LTt[i] = Math.log10(t);
+  }
+})();
+function interp(xs, ys, x) {
+  let lo = 0, hi = xs.length - 1;
+  if (x <= xs[0]) return null;
+  if (x >= xs[hi]) return ys[hi] + (ys[hi] - ys[hi - 1]) / (xs[hi] - xs[hi - 1]) * (x - xs[hi]);
+  while (hi - lo > 1) { const m = (lo + hi) >> 1; if (xs[m] <= x) lo = m; else hi = m; }
+  return ys[lo] + (ys[hi] - ys[lo]) * (x - xs[lo]) / (xs[hi] - xs[lo]);
+}
+const laOfLt = lt => { const v = interp(LTt, LAt, lt); return v === null ? LAt[0] + 0.5 * (lt - LTt[0]) : v; };
+const ltOfLa = la => { const v = interp(LAt, LTt, la); return v === null ? LTt[0] + 2 * (la - LAt[0]) : v; };
+const AGE_S = 10 ** ltOfLa(0), AGE_GYR = AGE_S / S_PER_GYR, LT_AGE = Math.log10(AGE_S);
+const aOfGyr = g => 10 ** laOfLt(Math.log10(Math.max(g, 1e-70) * S_PER_GYR));
+const T_REC_S = 10 ** ltOfLa(Math.log10(1 / 1090.9));
+function cosmoAt(lt) {
+  const la = laOfLt(lt), a = 10 ** la, T = tempOfA(a), e2 = E2(a);
+  return { lt, t: 10 ** lt, a, la, z: 1 / a - 1, T, rho: RHO_C0 * e2, spec: 10 ** lt < T_INFL_END };
+}
+
+// ---------- Argumento de tiempo (Kahn & Woltjer 1959): órbita radial VL–M31 ----------
+const TA = (() => {
+  const r0 = 0.78, v0 = -109.3 * 1.0227e-3, t0 = AGE_GYR; // Mpc, Mpc/Gyr, Gyr
+  const target = v0 * t0 / r0, f = e => Math.sin(e) * (e - Math.sin(e)) / (1 - Math.cos(e)) ** 2 - target;
+  let lo = Math.PI + 1e-6, hi = 2 * Math.PI - 1e-6;
+  for (let k = 0; k < 100; k++) { const m = (lo + hi) / 2; if (f(lo) * f(m) <= 0) hi = m; else lo = m; }
+  const eta0 = (lo + hi) / 2, A = r0 / (1 - Math.cos(eta0)), B = t0 / (eta0 - Math.sin(eta0));
+  return { A, B, M: A ** 3 / (4.498e-15 * B * B), tMax: Math.PI * B, rMax: 2 * A };
+})();
+function keplerEta(M, max) { // resuelve η − sin η = M
+  let e = Math.min(Math.cbrt(6 * M), max);
+  for (let i = 0; i < 30; i++) { const d = (e - Math.sin(e) - M) / Math.max(1 - Math.cos(e), 1e-9); e = Math.min(Math.max(e - d, 0), max); if (Math.abs(d) < 1e-12) break; }
+  return e;
+}
+const LG_T1 = 0.005; // Gyr: antes de esto todo sigue el flujo de Hubble (coordenadas comóviles fijas)
+const LG_A1 = aOfGyr(LG_T1);
+const sepTiming = tg => TA.A * (1 - Math.cos(keplerEta(tg / TA.B, 2 * Math.PI)));
+function sepPhys(tg) { // separación física VL–M31 [Mpc]
+  return tg <= LG_T1 ? sepTiming(LG_T1) * aOfGyr(tg) / LG_A1 : sepTiming(tg);
+}
+const SEP_C0 = sepTiming(LG_T1) / LG_A1; // separación comóvil inicial (~3 Mpc)
+const sepCom = tg => tg <= LG_T1 ? SEP_C0 : sepPhys(tg) / aOfGyr(tg);
+
+// cascarón exterior de la región lagrangiana de la Vía Láctea (colapso esférico)
+const RL_MW = 1.72, RVIR_MW = 0.25;
+const SHELL = (() => { const th1 = Math.acos(1 - LG_A1 * RL_MW / RVIR_MW); return { B: LG_T1 / (th1 - Math.sin(th1)) }; })();
+function shellR(tg, rL = RL_MW, A = RVIR_MW, B = SHELL.B) {
+  if (tg <= LG_T1) return rL * aOfGyr(tg);
+  const th = keplerEta(tg / B, 1.5 * Math.PI);
+  let R = A * (1 - Math.cos(th));
+  const s = Math.min(Math.max((th - 3.6) / (1.5 * Math.PI - 3.6), 0), 1);
+  return R + (A - R) * s * s * (3 - 2 * s);
+}
+
+/* =====================================================================
+   2. Formato (castellano)
+   ===================================================================== */
+const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+const sup = n => String(n).split('').map(c => SUP[c] ?? c).join('');
+let LANG = 'es';
+const nf = (v, d = 0) => v.toLocaleString(LANG === 'en' ? 'en-US' : 'es-AR', { minimumFractionDigits: d, maximumFractionDigits: d });
+function sig(v, s = 2) {
+  if (!isFinite(v)) return '—';
+  if (v === 0) return '0';
+  const e = Math.floor(Math.log10(Math.abs(v))), p = s - 1 - e;
+  const r = Math.round(v * 10 ** p) / 10 ** p;
+  return nf(r, Math.max(0, p));
+}
+function sci(v, d = 1) {
+  if (v === 0) return '0';
+  let e = Math.floor(Math.log10(Math.abs(v))), m = Number((v / 10 ** e).toFixed(d));
+  if (Math.abs(m) >= 10) { m /= 10; e += 1; }
+  if (Math.abs(m - 1) < 0.05) return `10${sup(e)}`;
+  return `${nf(m, d)} × 10${sup(e)}`;
+}
+function fmtTime(s) {
+  const yr = s / S_PER_YR;
+  if (s < 1e-3) return `${sci(s)} s`;
+  if (s < 60) return `${sig(s, 2)} s`;
+  if (s < 3600) return `${sig(s / 60, 2)} min`;
+  if (s < 86400) return `${sig(s / 3600, 2)} h`;
+  const en = LANG === 'en';
+  if (yr < 1) { const d = sig(s / 86400, 2); return `${d} ${en ? (d === '1' ? 'day' : 'days') : (d === '1' ? 'día' : 'días')}`; }
+  if (yr < 1e6) { const y = sig(yr, 2); return `${y} ${en ? (y === '1' ? 'year' : 'years') : (y === '1' ? 'año' : 'años')}`; }
+  if (en) return yr < 1e9 ? `${sig(yr / 1e6, yr < 1e7 ? 2 : 3)} million years` : `${sig(yr / 1e9, 3)} billion years`;
+  return `${sig(yr / 1e6, yr < 1e7 ? 2 : 3)} millones de años`;
+}
+function fmtLen(m) {
+  const ly = m / M_PER_LY;
+  if (!isFinite(m) || m <= 0) return '—';
+  if (m < 1e-6) return `${sci(m)} m`;
+  if (m < 1e-3) return `${sig(m * 1e6, 2)} µm`;
+  if (m < 1e-2) return `${sig(m * 1e3, 2)} mm`;
+  if (m < 1) return `${sig(m * 100, 2)} cm`;
+  if (m < 1e3) return `${sig(m, 2)} m`;
+  if (m < 3e10) return `${sig(m / 1e3, 2)} km`;
+  const en = LANG === 'en';
+  if (ly < 0.05) return `${sig(m / M_PER_AU, 2)} ${en ? 'AU' : 'UA'}`;
+  if (ly < 1e6) return `${sig(ly, 2)} ${en ? 'light‑years' : 'años luz'}`;
+  if (en) return ly < 1e9 ? `${sig(ly / 1e6, 3)} million light‑years` : `${sig(ly / 1e9, 3)} billion light‑years`;
+  return `${sig(ly / 1e6, 3)} millones de años luz`;
+}
+const fmtMpc = mpc => fmtLen(mpc * MPC_M);
+const fmtTemp = T => T < 1e5 ? `${sig(T, 2)} K` : `${sci(T, 1)} K`;
+function cmpRho(r) {
+  const H = 1.6735e-27;
+  if (r < 1e-6) { const n = r / H; return `≈ ${n < 1e6 ? sig(n, 2) : sci(n, 1)} átomos de H por m³`; }
+  const L = [[1.2, 'el aire'], [1000, 'el agua'], [11340, 'el plomo'], [1e9, 'una enana blanca'], [2.3e17, 'un núcleo atómico'], [5.2e96, 'la densidad de Planck']];
+  for (const [v, name] of L) { const q = r / v; if (q > 0.3 && q < 3) return `≈ ${name}`; }
+  let best = null; for (const e of L) if (e[0] <= r) best = e;
+  if (!best) return `${sci(1.2 / r, 0)} veces menos que el aire`;
+  const q = r / best[0];
+  return `≈ ${q < 1e4 ? sig(q, 1) : sci(q, 0)} × ${best[1]}`;
+}
+
+/* =====================================================================
+   3. Color de cuerpo negro (aprox. de T. Helland) y brillo visible
+   ===================================================================== */
+function bb(T) {
+  const t = Math.min(Math.max(T, 1000), 40000) / 100;
+  let r, g, b;
+  if (t <= 66) { r = 255; g = 99.4708025861 * Math.log(t) - 161.1195681661; b = t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307; }
+  else { r = 329.698727446 * Math.pow(t - 60, -0.1332047592); g = 288.1221695283 * Math.pow(t - 60, -0.0755148492); b = 255; }
+  return [r, g, b].map(v => Math.min(Math.max(v, 0), 255) / 255);
+}
+function glowI(T) {
+  if (T >= 3000) return 1 + 0.30 * Math.log10(T / 3000);
+  if (T <= 700) return 0;
+  return Math.pow((T - 700) / 2300, 1.7);
+}
+
+/* =====================================================================
+   4. Línea de tiempo: posición del control ↔ log10(t)
+   ===================================================================== */
+const KN = [
+  [0.000, -44.0, 'log'],
+  [0.025, -36.0, 'log'],
+  [0.080, -32.0, 'log'],
+  [0.235, 0.0, 'log'],
+  [1 / 3, Math.log10(T_REC_S), 'log'],
+  [0.450, Math.log10(3e7 * S_PER_YR), 'log'],
+  [0.570, Math.log10(4e8 * S_PER_YR), 'log'],
+  [0.690, Math.log10(1.5e9 * S_PER_YR), 'log'],
+  [0.820, Math.log10(4.5e9 * S_PER_YR), 'lin'],
+  [1.000, LT_AGE, 'lin'],
+];
+function ltOfX(x) {
+  x = Math.min(Math.max(x, 0), 1);
+  for (let i = 1; i < KN.length; i++) if (x <= KN[i][0]) {
+    const [x0, l0] = KN[i - 1], [x1, l1, mode] = KN[i], f = (x - x0) / (x1 - x0);
+    if (mode === 'lin') return Math.log10(10 ** l0 + (10 ** l1 - 10 ** l0) * f);
+    return l0 + (l1 - l0) * f;
+  }
+  return LT_AGE;
+}
+function xOfLt(lt) {
+  if (lt <= KN[0][1]) return 0;
+  for (let i = 1; i < KN.length; i++) if (lt <= KN[i][1]) {
+    const [x0, l0] = KN[i - 1], [x1, l1, mode] = KN[i];
+    const f = mode === 'lin' ? (10 ** lt - 10 ** l0) / (10 ** l1 - 10 ** l0) : (lt - l0) / (l1 - l0);
+    return x0 + (x1 - x0) * f;
+  }
+  return 1;
+}
+const ltYr = y => Math.log10(y * S_PER_YR);
+// épocas: [inicio (s), cuándo, título, explicación breve]
+const EPOCHS = [
+  [0, 'Antes de 10⁻⁴³ s', 'Era de Planck', 'Todo es tan denso que la gravedad necesita una teoría cuántica que todavía no tenemos. Lo que ves acá es simbólico.'],
+  [T_PLANCK, '10⁻⁴³ – 10⁻³⁶ s', 'Era especulativa', 'Energías imposibles de recrear en un laboratorio. Quizás todas las fuerzas estaban unificadas; todavía no lo sabemos.'],
+  [1e-36, '10⁻³⁶ – 10⁻³² s', 'Inflación', 'Hipótesis muy aceptada: el espacio se estira al menos 10²⁶ veces en un instante. Las fluctuaciones cuánticas se congelan y serán las semillas de las galaxias.'],
+  [1e-32, '10⁻³² – 10⁻¹¹ s', 'Un plasma en todas partes', 'La energía de la inflación se convierte en partículas. Todo el espacio queda lleno de un plasma igual de caliente en todos lados.'],
+  [1e-11, '10⁻¹¹ – 10⁻⁵ s', 'Sopa de quarks', 'Las partículas acaban de adquirir masa. Quarks y gluones andan sueltos, a billones de grados.'],
+  [1e-5, '10⁻⁵ s – 1 s', 'Nacen protones y neutrones', 'Los quarks se agrupan de a tres. Esos protones serán los núcleos del hidrógeno de tu cuerpo.'],
+  [1, '1 s – 3 min', 'Los neutrinos se liberan', 'Los neutrinos dejan de chocar con la materia y viajan libres hasta hoy. Electrones y positrones se aniquilan.'],
+  [150, '3 – 20 min', 'Nucleosíntesis', 'Todo el universo funciona como un reactor de fusión: se forman los núcleos de helio (un cuarto de la masa) y trazas de litio.'],
+  [1300, '20 min – 380.000 años', 'Un mar de luz opaco', 'La luz choca sin parar con núcleos y electrones y no puede viajar lejos. Desde los 50.000 años, la materia oscura empieza a agruparse.'],
+  [3.3e5 * S_PER_YR, '380.000 años', 'Recombinación', 'Los electrones se unen a los núcleos y el universo se vuelve transparente. Esa luz, estirada, es el fondo cósmico que medimos hoy.'],
+  [4.5e5 * S_PER_YR, '380.000 – 3 millones de años', 'El resplandor se apaga', 'La luz que llena todo se enfría del naranja al rojo oscuro. Todavía no hay estrellas: solo gas y materia oscura.'],
+  [3.2e6 * S_PER_YR, '3 – 100 millones de años', 'Edades oscuras', 'No brilla nada. La gravedad amplifica en silencio las pequeñas diferencias de densidad y va armando la red cósmica.'],
+  [1.0e8 * S_PER_YR, '100 – 300 millones de años', 'Primeras estrellas', 'En los nudos de la red el gas colapsa y se encienden las primeras estrellas. Empiezan a fabricar carbono, oxígeno y hierro.'],
+  [3.0e8 * S_PER_YR, '300 – 1.000 millones de años', 'Reionización', 'La luz de las galaxias jóvenes vuelve a ionizar el gas intergaláctico, en burbujas que crecen hasta unirse.'],
+  [1.0e9 * S_PER_YR, '1.000 – 7.700 millones de años', 'Crecen las galaxias', 'Las galaxias se alimentan de gas y se fusionan a lo largo de los filamentos. La Vía Láctea y Andrómeda forman sus discos.'],
+  [7.7e9 * S_PER_YR, '~7.700 millones de años', 'La expansión se acelera', 'La energía oscura empieza a ganarle a la gravedad: la expansión deja de frenarse.'],
+  [8.45e9 * S_PER_YR, '~8.500 millones de años', 'Andrómeda se da vuelta', 'La atracción mutua frena a Andrómeda, que empieza a acercarse, mientras el resto del universo se sigue alejando.'],
+  [9.05e9 * S_PER_YR, 'Hace 4.600 millones de años', 'Nace el Sistema Solar', 'Una nube de gas de la Vía Láctea, enriquecida por estrellas anteriores, colapsa y forma el Sol, la Tierra y los planetas.'],
+  [10.3e9 * S_PER_YR, 'Desde hace 3.500 millones de años', 'Domina la energía oscura', 'Ya pesa más que toda la materia. Las galaxias fuera del Grupo Local se alejan cada vez más rápido.'],
+  [13.55e9 * S_PER_YR, '13.800 millones de años', 'Hoy', 'El fondo cósmico está a 2,7 K. Andrómeda se acerca a unos 110 km/s: hay ~50 % de chances de que choquen en los próximos 10.000 millones de años.'],
+];
+const epochIdx = s => { let k = 0; for (let i = 0; i < EPOCHS.length; i++) if (s >= EPOCHS[i][0]) k = i; return k; };
+
+const LA_INFL_END = laOfLt(-32);
+function laVis(lt) {
+  if (lt >= -32) return laOfLt(lt);
+  if (lt >= -36) return LA_INFL_END - 26 * (-32 - lt) / 4;
+  return LA_INFL_END - 26 - 0.5 * (-36 - lt);
+}
+/* =====================================================================
+   5. Red cósmica procedural: campo gaussiano + aproximación de Zel'dovich
+      x = q + D(t)·ψ(q), con δ_inicial = −∇·ψ. Caja periódica de 500 Mpc.
+      Canales: R = δ inicial (las "semillas" del fondo cósmico),
+               G/B/A = densidad a tres etapas de crecimiento D.
+   ===================================================================== */
+const TILE_MPC = 180, WN = 512, GN = 256;
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function fft1d(re, im, n, inv) {
+  for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = 2 * Math.PI / len * (inv ? 1 : -1), wr = Math.cos(ang), wi = Math.sin(ang), h = len >> 1;
+    for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let k = 0; k < h; k++) { const a = i + k, b = a + h; const br = re[b] * cr - im[b] * ci, bi = re[b] * ci + im[b] * cr; re[b] = re[a] - br; im[b] = im[a] - bi; re[a] += br; im[a] += bi; const t = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = t; } }
+  }
+  if (inv) for (let i = 0; i < n; i++) { re[i] /= n; im[i] /= n; }
+}
+function fft2d(re, im, n, inv) {
+  const rr = new Float64Array(n), ri = new Float64Array(n);
+  for (let y = 0; y < n; y++) { const o = y * n; for (let x = 0; x < n; x++) { rr[x] = re[o + x]; ri[x] = im[o + x]; } fft1d(rr, ri, n, inv); for (let x = 0; x < n; x++) { re[o + x] = rr[x]; im[o + x] = ri[x]; } }
+  for (let x = 0; x < n; x++) { for (let y = 0; y < n; y++) { rr[y] = re[y * n + x]; ri[y] = im[y * n + x]; } fft1d(rr, ri, n, inv); for (let y = 0; y < n; y++) { re[y * n + x] = rr[y]; im[y * n + x] = ri[y]; } }
+}
+function bakeWeb() {
+  const n = WN, NN = n * n, rnd = mulberry32(20260923), KC = 30, NIDX = -1, SIG = 1.8;
+  const gauss = () => { let u = 0; while (u === 0) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); };
+  const wr = new Float32Array(NN), wi = new Float32Array(NN);
+  for (let i = 0; i < NN; i++) wr[i] = gauss();
+  fft2d(wr, wi, n, false);
+  const dR = new Float32Array(NN), dI = new Float32Array(NN), xR = new Float32Array(NN), xI = new Float32Array(NN), yR = new Float32Array(NN), yI = new Float32Array(NN);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const i = y * n + x, kx = x < n / 2 ? x : x - n, ky = y < n / 2 ? y : y - n, k2 = kx * kx + ky * ky;
+    if (!k2) continue;
+    const amp = Math.pow(k2, NIDX / 4) * Math.exp(-k2 / (2 * KC * KC)), r = wr[i] * amp, m = wi[i] * amp, s = n / (2 * Math.PI) / k2;
+    dR[i] = r; dI[i] = m; xR[i] = -m * kx * s; xI[i] = r * kx * s; yR[i] = -m * ky * s; yI[i] = r * ky * s;
+  }
+  fft2d(dR, dI, n, true); fft2d(xR, xI, n, true); fft2d(yR, yI, n, true);
+  let s2 = 0; for (let i = 0; i < NN; i++) s2 += dR[i] * dR[i];
+  const sg = Math.sqrt(s2 / NN);
+  for (let i = 0; i < NN; i++) { dR[i] /= sg; xR[i] /= sg; yR[i] /= sg; }
+  const deposit = D => {
+    const rho = new Float32Array(NN);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const i = y * n + x; let px = x + D * xR[i], py = y + D * yR[i];
+      px = ((px % n) + n) % n; py = ((py % n) + n) % n;
+      const ix = Math.floor(px), iy = Math.floor(py), fx = px - ix, fy = py - iy, ix1 = (ix + 1) % n, iy1 = (iy + 1) % n;
+      rho[iy * n + ix] += (1 - fx) * (1 - fy); rho[iy * n + ix1] += fx * (1 - fy); rho[iy1 * n + ix] += (1 - fx) * fy; rho[iy1 * n + ix1] += fx * fy;
+    }
+    const out = new Float32Array(NN);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      let a = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) a += (dx ? 0.5 : 1) * (dy ? 0.5 : 1) * rho[((y + dy + n) % n) * n + ((x + dx + n) % n)];
+      out[y * n + x] = a / 4;
+    }
+    return out;
+  };
+  const Ds = [0.3 * SIG, 0.62 * SIG, SIG], rh = Ds.map(deposit);
+  const enc = r => Math.max(0, Math.min(255, Math.round(255 * (0.32 + 0.30 * Math.log10(Math.max(r, 1e-3))))));
+  const web = new Uint8Array(NN * 4);
+  for (let i = 0; i < NN; i++) {
+    web[i * 4] = Math.max(0, Math.min(255, Math.round(255 * (0.5 + 0.18 * dR[i]))));
+    web[i * 4 + 1] = enc(rh[0][i]); web[i * 4 + 2] = enc(rh[1][i]); web[i * 4 + 3] = enc(rh[2][i]);
+  }
+  // galaxias: se eligen partículas en zonas densas del estado final
+  const fin = rh[2], D = SIG; let S = 0;
+  const pw = new Float32Array(NN);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const i = y * n + x; let px = x + D * xR[i], py = y + D * yR[i]; px = ((px % n) + n) % n; py = ((py % n) + n) % n;
+    const r = fin[Math.floor(py) * n + Math.floor(px)]; pw[i] = Math.pow(r, 1.45); S += pw[i];
+  }
+  const K = 7000 / S, gal = new Uint8Array(GN * GN * 4), list = [];
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const i = y * n + x; if (rnd() > K * pw[i]) continue;
+    let px = x + D * xR[i], py = y + D * yR[i]; px = ((px % n) + n) % n; py = ((py % n) + n) % n;
+    const gx = px / n * GN, gy = py / n * GN, cx = Math.floor(gx), cy = Math.floor(gy), o = (cy * GN + cx) * 4;
+    if (gal[o + 3]) continue;
+    const dens = fin[Math.floor(py) * n + Math.floor(px)], u = rnd();
+    const b = Math.min(1, (0.28 + 0.72 * u * u * u) * (0.8 + 0.22 * Math.log10(1 + dens)));
+    const fx = gx - cx, fy = gy - cy, ell = dens > 9 && rnd() < 0.7;
+    gal[o] = Math.min(255, Math.round(fx * 255)); gal[o + 1] = Math.min(255, Math.round(fy * 255)); gal[o + 2] = Math.round(b * 255); gal[o + 3] = ell ? 255 : 128;
+    list.push({ x: (cx + gal[o] / 255) / GN, y: (cy + gal[o + 1] / 255) / GN, b });
+  }
+  return { web, gal, list };
+}
+
+
+/* =====================================================================
+   6. Escena: cámara fija en distancias reales (1 unidad = 0,5 millones de años luz)
+   ===================================================================== */
+const VU_PER_MPC = 3.26156 / 0.5;
+const stage = document.getElementById('stage');
+const IS_MOBILE = Math.min(innerWidth, innerHeight) < 600 || /Mobi|Android/i.test(navigator.userAgent);
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, IS_MOBILE ? 1.5 : 1.75));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.setClearColor(0x04050b, 1);
+stage.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.02, 40000);
+camera.position.set(0, 19, 41);
+const controls = new OrbitControls(camera, renderer.domElement);
+Object.assign(controls, { enableDamping: true, dampingFactor: 0.07, rotateSpeed: 0.55, zoomSpeed: 0.9, minDistance: 0.4, maxDistance: 600, maxPolarAngle: Math.PI * 0.47, autoRotate: !REDUCED, autoRotateSpeed: 0.18 });
+const rtt = new THREE.WebGLRenderTarget(innerWidth, innerHeight, { type: THREE.HalfFloatType, samples: IS_MOBILE ? 0 : 4 });
+const composer = new EffectComposer(renderer, rtt);
+composer.setPixelRatio(renderer.getPixelRatio());
+composer.setSize(innerWidth, innerHeight);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.75, 0.55, 0.78);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+const labelRenderer = new CSS2DRenderer({ element: document.getElementById('labels') });
+labelRenderer.setSize(innerWidth, innerHeight);
+const lin = hex => new THREE.Color(hex);
+const U = v => ({ value: v });
+
+const skyMat = new THREE.ShaderMaterial({
+  uniforms: { uHor: U(new THREE.Color(0, 0, 0)), uTop: U(lin(0x04050b)) },
+  vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+  fragmentShader: `uniform vec3 uHor; uniform vec3 uTop; varying vec3 vDir;
+    void main(){ float e = abs(vDir.y); gl_FragColor = vec4(uTop + uHor * (exp(-e * 9.0) * 0.55 + exp(-e * 2.5) * 0.12), 1.0); }`,
+  side: THREE.BackSide, depthWrite: false, depthTest: false,
+});
+const sky = new THREE.Mesh(new THREE.SphereGeometry(18000, 32, 16), skyMat);
+sky.renderOrder = -10; scene.add(sky);
+
+/* ---------- la hoja infinita ----------
+   Cuadrícula jerárquica: niveles cada ×2, elegidos por su tamaño en pantalla. Como el
+   patrón es autosemejante, la escala se reduce módulo 2 (uSeff ∈ [1,2), uM = exponente)
+   y la expansión se ve continua durante 60 órdenes de magnitud sin perder precisión. */
+const SHEET_VS = `varying vec3 vWorld; varying float vDepth;
+void main(){ vec4 wp = modelMatrix * vec4(position, 1.0); vWorld = wp.xyz; vec4 mv = viewMatrix * wp; vDepth = -mv.z; gl_Position = projectionMatrix * mv; }`;
+const SHEET_FS = `
+precision highp float;
+uniform float uSeff; uniform float uM; uniform float uS; uniform vec2 uWebOff; uniform float uTile;
+uniform sampler2D uWeb; uniform sampler2D uGal;
+uniform vec3 uMedium; uniform vec3 uLineCol; uniform float uGridA;
+uniform float uPlasma; uniform float uGrowth; uniform float uWebA; uniform vec3 uWebCol;
+uniform float uGalA; uniform float uGalHaze; uniform float uIon; uniform float uIonA;
+uniform float uFogK; uniform vec3 uFogCol; uniform float uEdge; uniform vec2 uEdgeC;
+uniform float uObsR; uniform float uObsA; uniform vec3 uObsCol; uniform float uTime; uniform float uFoam;
+varying vec3 vWorld; varying float vDepth;
+float hash12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
+float hash11(float n){ return fract(sin(n * 12.9898 + 4.1414) * 43758.5453); }
+float vnoise(vec2 x){ vec2 i = floor(x), f = fract(x); vec2 w = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash12(i), hash12(i + vec2(1.0, 0.0)), w.x), mix(hash12(i + vec2(0.0, 1.0)), hash12(i + vec2(1.0, 1.0)), w.x), w.y); }
+vec3 galaxies(vec2 tuv){
+  vec2 g = tuv * 256.0; vec2 fg = fwidth(g); float spx = 1.0 / max(max(fg.x, fg.y), 1e-9);
+  if (spx < 0.9) return vec3(uGalHaze);
+  vec2 c = floor(g); vec3 acc = vec3(0.0); float rad = 1.35 / spx;
+  for (int j = -1; j <= 1; j++) for (int i = -1; i <= 1; i++) {
+    vec2 cc = c + vec2(float(i), float(j));
+    vec4 t = texelFetch(uGal, ivec2(mod(cc, 256.0)), 0);
+    if (t.a < 0.01) continue;
+    vec2 gp = cc + t.rg;
+    if (length(gp / 256.0 * uTile - uWebOff) < 1.6) continue;   // el Grupo Local lo dibujan las partículas
+    float dd = length(g - gp) / rad;
+    acc += exp(-dd * dd * 1.7) * t.b * (t.a > 0.75 ? vec3(1.0, 0.80, 0.58) : vec3(0.70, 0.83, 1.0));
+  }
+  return mix(vec3(uGalHaze), acc * 1.8, smoothstep(0.9, 2.6, spx));
+}
+void main(){
+  vec2 p = vWorld.xz;
+  vec2 ue = p / uSeff;
+  vec2 fw2 = max(fwidth(ue), vec2(1e-9)); float fw = max(fw2.x, fw2.y);
+  vec3 col = uMedium;
+  if (uFoam > 0.0) col *= 1.0 + uFoam * 0.45 * (hash12(floor(p * 2.0) + floor(uTime * 20.0)) - 0.5);
+  // fluctuaciones primordiales: casi iguales a toda escala → ruido autosemejante
+  if (uPlasma > 0.001) {
+    float k0 = ceil(log2(fw * 5.0)); float acc = 0.0, ws = 0.0;
+    for (int i = 0; i < 7; i++) {
+      float k = k0 + float(i), sz = exp2(k), spx = sz / fw;
+      float w = smoothstep(5.0, 22.0, spx) * (1.0 - smoothstep(280.0, 900.0, spx));
+      float o = hash11(k - uM);
+      acc += w * (vnoise(ue / sz + vec2(o * 131.7, o * 57.3)) - 0.5); ws += w;
+    }
+    col *= 1.0 + uPlasma * 2.4 * acc / max(ws, 1e-3);
+  }
+  // red cósmica y galaxias (escala comóvil real)
+  if (uWebA > 0.001 || uGalA > 0.001 || uIonA > 0.001) {
+    vec2 tuv = (p / uS + uWebOff) / uTile;
+    vec4 w = textureGrad(uWeb, tuv, dFdx(tuv), dFdy(tuv));
+    float g3 = uGrowth * 3.0;
+    float v = g3 < 1.0 ? mix(0.32, w.g, g3) : (g3 < 2.0 ? mix(w.g, w.b, g3 - 1.0) : mix(w.b, w.a, clamp(g3 - 2.0, 0.0, 1.0)));
+    vec2 tuv2 = mat2(0.80, -0.60, 0.60, 0.80) * tuv * 3.7 + vec2(0.37, 0.61);
+    vec4 w2 = textureGrad(uWeb, tuv2, dFdx(tuv2), dFdy(tuv2));
+    float v2 = g3 < 1.0 ? mix(0.32, w2.g, g3) : (g3 < 2.0 ? mix(w2.g, w2.b, g3 - 1.0) : mix(w2.b, w2.a, clamp(g3 - 2.0, 0.0, 1.0)));
+    float wb1 = pow(max((v - 0.3) / 0.7, 0.0), 1.6), wb2 = pow(max((v2 - 0.3) / 0.7, 0.0), 1.6);
+    col += uWebA * (1.7 * wb1 + 0.9 * wb2 * (0.35 + 1.3 * wb1)) * uWebCol;
+    if (uIonA > 0.0) {
+      vec2 tf = fwidth(tuv); float tl = log2(max(max(tf.x, tf.y) * 512.0, 1e-6));
+      float sm = textureLod(uWeb, tuv, max(tl, 5.2)).a;
+      float thr = mix(0.60, 0.18, uIon);
+      float ion = smoothstep(thr, thr + 0.02, sm), edge = ion * (1.0 - smoothstep(thr, thr + 0.05, sm));
+      col += uIonA * (ion * 0.035 + edge * 0.16) * vec3(0.35, 0.7, 1.0);
+    }
+    if (uGalA > 0.001) col += uGalA * galaxies(tuv);
+  }
+  // cuadrícula jerárquica infinita
+  float gl = 0.0;
+  { float k0 = ceil(log2(fw * 4.5));
+    for (int i = 0; i < 9; i++) {
+      float k = k0 + float(i), s = exp2(k), spx = s / fw;
+      if (spx > 3000.0) break;
+      float w = smoothstep(4.5, 18.0, spx) * (1.0 - smoothstep(1500.0, 3000.0, spx));
+      float b = mix(0.3, 0.95, smoothstep(18.0, 420.0, spx));
+      vec2 d = abs(fract(ue / s - 0.5) - 0.5) * s / fw2;
+      float wpx = mix(0.8, 1.45, smoothstep(40.0, 500.0, spx));
+      vec2 l = 1.0 - smoothstep(vec2(wpx * 0.5), vec2(wpx * 0.5 + 1.0), d);
+      gl = max(gl, max(l.x, l.y) * w * b);
+    } }
+  col = mix(col, uLineCol, gl * uGridA);
+  // todo lo que hoy podemos ver (universo observable actual)
+  if (uObsA > 0.0) {
+    float rr = length(p), fr = max(fwidth(rr), 1e-9), R = max(uObsR, 6.0 * fr);
+    float ring = 1.0 - smoothstep(1.2, 2.6, abs(rr - R) / fr);
+    float inside = 1.0 - smoothstep(R - fr, R + fr, rr);
+    float lum = dot(col, vec3(0.3, 0.5, 0.2));
+    col = mix(col, mix(uObsCol, vec3(0.02, 0.32, 0.20), smoothstep(0.25, 0.9, lum)), ring * uObsA);
+    col += uObsCol * inside * 0.06 * uObsA * (1.0 - smoothstep(40.0, 160.0, uObsR));
+  }
+  col = mix(col, uFogCol, 1.0 - exp(-vDepth * uFogK));
+  gl_FragColor = vec4(col, 1.0 - smoothstep(uEdge * 0.5, uEdge, length(p - uEdgeC)));
+}`;
+
+const BAKE = bakeWeb();
+const webTex = new THREE.DataTexture(BAKE.web, WN, WN, THREE.RGBAFormat, THREE.UnsignedByteType);
+Object.assign(webTex, { wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, magFilter: THREE.LinearFilter, minFilter: THREE.LinearMipmapLinearFilter, generateMipmaps: true, colorSpace: THREE.NoColorSpace });
+webTex.anisotropy = renderer.capabilities.getMaxAnisotropy(); webTex.needsUpdate = true;
+const galTex = new THREE.DataTexture(BAKE.gal, GN, GN, THREE.RGBAFormat, THREE.UnsignedByteType);
+Object.assign(galTex, { magFilter: THREE.NearestFilter, minFilter: THREE.NearestFilter, generateMipmaps: false, colorSpace: THREE.NoColorSpace }); galTex.needsUpdate = true;
+// el Grupo Local se ubica sobre un filamento de la red
+const WEB_OFF = (() => {
+  let best = BAKE.list[0], bd = 1e9;
+  for (const g of BAKE.list) { const px = Math.floor(g.x * WN) % WN, py = Math.floor(g.y * WN) % WN, v = BAKE.web[(py * WN + px) * 4 + 3] / 255, d = Math.abs(v - 0.6); if (d < bd) { bd = d; best = g; } }
+  return new THREE.Vector2(best.x * TILE_MPC, best.y * TILE_MPC);
+})();
+const sheetMat = new THREE.ShaderMaterial({
+  vertexShader: SHEET_VS, fragmentShader: SHEET_FS, transparent: true, depthWrite: false,
+  uniforms: {
+    uSeff: U(1), uM: U(0), uS: U(1), uWebOff: U(WEB_OFF), uTile: U(TILE_MPC), uWeb: U(webTex), uGal: U(galTex),
+    uMedium: U(new THREE.Color()), uLineCol: U(new THREE.Color()), uGridA: U(0.9),
+    uPlasma: U(0), uGrowth: U(0), uWebA: U(0), uWebCol: U(lin(0x6f86b8)), uGalA: U(0), uGalHaze: U(0.03), uIon: U(0), uIonA: U(0),
+    uFogK: U(0.002), uFogCol: U(new THREE.Color()), uEdge: U(4000), uEdgeC: U(new THREE.Vector2()),
+    uObsR: U(0), uObsA: U(1), uObsCol: U(lin(0x8ff0cf)), uTime: U(0), uFoam: U(0),
+  },
+});
+const sheet = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), sheetMat);
+sheet.renderOrder = -5; sheet.frustumCulled = false; scene.add(sheet);
+/* =====================================================================
+   7. Vía Láctea y Andrómeda: regiones lagrangianas → galaxias
+      Cada partícula sigue un cascarón de colapso esférico:
+      R = A(1 − cos θ), t = B(θ − sin θ), empalmado con el flujo de Hubble.
+      A = radio final (perfil NFW), B tal que R(t1) = a(t1)·r_L.
+   ===================================================================== */
+const LG_S0 = 6;                  // unidades visuales por Mpc comóvil
+const SUN_T = AGE_GYR - 4.568;    // nacimiento del Sistema Solar [Gyr]
+const GALS = [
+  { key: 'mw', axes: [1.15, 2.1, 2.1], Rvir: RVIR_MW, c: 10, Rd: 0.0026, zd: 0.00028, bulge: 0.0007, pitch: 0.23, bar: true,
+    normal: new THREE.Vector3(-0.368, 0.93, 0.0).normalize(), spin: 0.6,
+    dm: [0.22, 0.55, 1.0], gas: [0.50, 0.82, 1.0] },
+  { key: 'm31', axes: [1.15, 2.1, 2.1], Rvir: 0.27, c: 10, Rd: 0.0053, zd: 0.0005, bulge: 0.0016, pitch: 0.17, bar: false,
+    normal: new THREE.Vector3(-0.225, 0.6, 0.768).normalize(), spin: 2.1,
+    dm: [0.90, 0.32, 0.88], gas: [1.0, 0.60, 0.95] },
+];
+GALS.forEach(G => {
+  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), G.normal);
+  q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), G.spin));
+  G.rot = new THREE.Matrix3().setFromMatrix4(new THREE.Matrix4().makeRotationFromQuaternion(q));
+});
+const SUN_F = new THREE.Vector3(0.00818 * Math.cos(2.35), 0.00002, 0.00818 * Math.sin(2.35)); // en el marco del disco
+function nfwInv(f, c) { const m = x => Math.log(1 + x) - x / (1 + x), mc = m(c); let lo = 0, hi = c; for (let k = 0; k < 48; k++) { const mid = (lo + hi) / 2; if (m(mid) / mc < f) lo = mid; else hi = mid; } return (lo + hi) / 2; }
+function buildLG() {
+  const NPER = IS_MOBILE ? 9000 : 22000, N = NPER * 2, rnd = mulberry32(1959);
+  const gauss = () => { let u = 0; while (u === 0) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); };
+  const unit = () => { const z = 2 * rnd() - 1, p = 2 * Math.PI * rnd(), s = Math.sqrt(1 - z * z); return [s * Math.cos(p), z, s * Math.sin(p)]; };
+  const aQ = new Float32Array(N * 3), aF = new Float32Array(N * 3), aP = new Float32Array(N * 4), aS = new Float32Array(N * 2), aC = new Float32Array(N * 3), aC2 = new Float32Array(N * 3);
+  let idx = 0;
+  GALS.forEach((G, gi) => {
+    const bary = [];
+    let nSun = 0;
+    for (let k = 0; k < NPER; k++, idx++) {
+      let x, y, z, r2; do { x = 2 * rnd() - 1; y = 2 * rnd() - 1; z = 2 * rnd() - 1; r2 = x * x + y * y + z * z; } while (r2 > 1 || r2 < 1e-8);
+      const rn = Math.sqrt(r2), f = r2 * rn, d = [x / rn, y / rn, z / rn];
+      const mod = 1 + 0.13 * Math.sin(3 * d[0] + 1.7 * d[1] + gi * 2) * Math.cos(2.3 * d[2] - d[0]) + 0.07 * Math.sin(5 * d[1] + 3 * d[2] + gi);
+      const q = [d[0] * rn * G.axes[0] * mod, d[1] * rn * G.axes[1] * mod, d[2] * rn * G.axes[2] * mod];
+      const rL = Math.hypot(q[0], q[1], q[2]);
+      const A = Math.max(nfwInv(f, G.c) * G.Rvir / G.c, 2e-5);
+      const ratio = Math.min(LG_A1 * rL / A, 1.95), th1 = Math.acos(1 - ratio);
+      const B = LG_T1 / (th1 < 1e-2 ? th1 ** 3 / 6 : th1 - Math.sin(th1));
+      aQ.set(q, idx * 3); aS[idx * 2] = gi; aS[idx * 2 + 1] = rnd();
+      const isB = rnd() < 0.2;
+      let kind = 0;
+      if (isB) { kind = 1; if (gi === 0 && f > 0.03 && f < 0.4 && nSun < 170 && rnd() < 0.09) { kind = 2; nSun++; } bary.push({ idx, f }); }
+      else {
+        const u = unit(); let fx = d[0] + 0.9 * u[0], fy = d[1] + 0.9 * u[1], fz = d[2] + 0.9 * u[2]; const l = Math.hypot(fx, fy, fz) || 1;
+        aF.set([fx / l * A, fy / l * A, fz / l * A], idx * 3);
+        aC.set(G.dm, idx * 3); aC2.set(G.dm, idx * 3);
+      }
+      aP.set([B, A, 0.5 + 0.9 * rnd(), kind], idx * 4);
+    }
+    // posiciones finales de gas/estrellas: bulbo, halo estelar y disco con brazos (de adentro hacia afuera)
+    const nb = bary.length, P = [], nBul = Math.round(nb * 0.16), nHal = Math.round(nb * 0.04);
+    for (let i = 0; i < nb; i++) {
+      let x, y, z, key, col;
+      if (i < nBul) {
+        const r = G.bulge * Math.pow(rnd(), 0.9) * 1.6, u = unit();
+        if (G.bar && rnd() < 0.55) { x = (2 * rnd() - 1) * G.Rd * 1.3; y = gauss() * G.zd * 1.5; z = gauss() * G.Rd * 0.28; }
+        else { x = u[0] * r; y = u[1] * r * 0.75; z = u[2] * r; }
+        key = Math.hypot(x, z) * 0.4; col = [1.0, 0.80, 0.52];
+      } else if (i < nBul + nHal) {
+        const r = G.Rd * (1.5 + 14 * rnd() ** 2), u = unit(); x = u[0] * r; y = u[1] * r; z = u[2] * r; key = r * 2.5; col = [1.0, 0.86, 0.7];
+      } else {
+        let R; do { R = -G.Rd * Math.log(rnd() * rnd() + 1e-9); } while (R > 6.2 * G.Rd || R < 0.25 * G.Rd);
+        let ph; const arm = rnd() < 0.62;
+        if (arm) ph = Math.log(R / G.Rd) / Math.tan(G.pitch) + (rnd() < 0.5 ? 0 : Math.PI) + gauss() * 0.22;
+        else ph = rnd() * 2 * Math.PI;
+        x = R * Math.cos(ph); z = R * Math.sin(ph); y = gauss() * G.zd * (1 + R / (4 * G.Rd));
+        key = R; col = arm ? [0.70, 0.84, 1.0] : [1.0, 0.94, 0.84];
+      }
+      P.push({ x, y, z, key, col });
+    }
+    P.sort((a, b) => a.key - b.key); bary.sort((a, b) => a.f - b.f);
+    bary.forEach((b, i) => {
+      const p = P[i], kind = aP[b.idx * 4 + 3];
+      aF.set([p.x, p.y, p.z], b.idx * 3);
+      if (kind > 1.5) { aC.set([1.0, 0.82, 0.38], b.idx * 3); aC2.set([1.0, 0.82, 0.38], b.idx * 3); }
+      else { aC.set(G.gas, b.idx * 3); aC2.set(p.col, b.idx * 3); }
+    });
+  });
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(aQ, 3));
+  g.setAttribute('aQ', new THREE.BufferAttribute(aQ, 3)); g.setAttribute('aF', new THREE.BufferAttribute(aF, 3));
+  g.setAttribute('aP', new THREE.BufferAttribute(aP, 4)); g.setAttribute('aS', new THREE.BufferAttribute(aS, 2));
+  g.setAttribute('aC', new THREE.BufferAttribute(aC, 3)); g.setAttribute('aC2', new THREE.BufferAttribute(aC2, 3));
+  return g;
+}
+const LG_VS = `
+attribute vec3 aQ; attribute vec3 aF; attribute vec4 aP; attribute vec2 aS; attribute vec3 aC; attribute vec3 aC2;
+uniform float uT; uniform float uA; uniform float uT1; uniform float uS; uniform float uSunT; uniform float uPx;
+uniform float uDM; uniform float uBar; uniform float uSunA; uniform float uAlpha;
+uniform vec3 uC0; uniform vec3 uC1; uniform vec3 uSunF; uniform mat3 uR0; uniform mat3 uR1;
+varying vec3 vCol; varying float vA;
+const float TV = 4.71238898; const float MV = 5.71238898;
+void main(){
+  bool m31 = aS.x > 0.5; vec3 C = m31 ? uC1 : uC0; mat3 R = m31 ? uR1 : uR0;
+  float kind = aP.w; vec3 off = aQ; float settle = 0.0;
+  if (uT > uT1) {
+    float B = aP.x; float A = aP.y; float M = uT / B; float th; float Rp;
+    if (M >= MV) { th = TV; Rp = A; }
+    else {
+      th = clamp(pow(6.0 * M, 1.0 / 3.0), 0.0, TV);
+      for (int i = 0; i < 6; i++) { float f = th - sin(th) - M; th = clamp(th - f / max(1.0 - cos(th), 1e-4), 0.0, TV); }
+      Rp = A * (1.0 - cos(th)); Rp = mix(Rp, A, smoothstep(3.6, TV, th));
+    }
+    vec3 d0 = aQ / max(length(aQ), 1e-7); vec3 phys;
+    if (kind < 0.5) { phys = normalize(mix(d0, normalize(aF), smoothstep(3.1416, TV, th))) * Rp; }
+    else {
+      phys = d0 * Rp; float tv = B * MV; settle = smoothstep(tv, tv + aP.z, uT);
+      phys = mix(phys, R * aF, settle);
+      if (kind > 1.5) phys = mix(phys, R * uSunF, smoothstep(uSunT - 0.85, uSunT, uT));
+    }
+    off = phys / uA;
+  }
+  vec4 mv = modelViewMatrix * vec4((C + off) * uS, 1.0);
+  gl_Position = projectionMatrix * mv;
+  float sz = kind < 0.5 ? 1.0 : (kind < 1.5 ? 1.2 : 2.6);
+  gl_PointSize = clamp(uPx * sz / max(-mv.z, 1e-5), 1.0, 3.6 * sz);
+  vCol = mix(aC, aC2, settle);
+  vA = (kind < 0.5 ? uDM : (kind < 1.5 ? uBar : uSunA)) * uAlpha;
+}`;
+const PT_FS = `
+uniform float uOcc; uniform float uInk; varying vec3 vCol; varying float vA;
+void main(){ vec2 c = gl_PointCoord - 0.5; float r2 = dot(c, c); if (r2 > 0.25) discard; float a = exp(-r2 * 14.0) * vA; gl_FragColor = vec4(mix(vCol, vCol * 0.4, uInk) * a, a * uOcc); }`;
+const blendPM = { blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor, blendEquation: THREE.AddEquation, transparent: true, depthWrite: false };
+const lgMat = new THREE.ShaderMaterial({
+  vertexShader: LG_VS, fragmentShader: PT_FS, ...blendPM,
+  uniforms: {
+    uT: U(AGE_GYR), uA: U(1), uT1: U(LG_T1), uS: U(LG_S0), uSunT: U(SUN_T), uPx: U(60),
+    uDM: U(0.22), uBar: U(0.55), uSunA: U(1), uAlpha: U(0), uOcc: U(0), uInk: U(0),
+    uC0: U(new THREE.Vector3()), uC1: U(new THREE.Vector3()), uSunF: U(SUN_F), uR0: U(GALS[0].rot), uR1: U(GALS[1].rot),
+  },
+});
+const lg = new THREE.Points(buildLG(), lgMat); lg.frustumCulled = false; lg.visible = false; scene.add(lg);
+lg.visible = true;
+function mkLabel(cls, html) {
+  const el = document.createElement('div'); el.className = 'lbl ' + cls; el.innerHTML = `<span class="t">${html}</span>`;
+  const o = new CSS2DObject(el); o.center.set(cls.includes(' l') ? 1 : cls.includes(' r') ? 0 : 0.5, cls.includes('below') ? 0 : 1); o.visible = false; scene.add(o); return o;
+}
+const L = {
+  here: mkLabel('obs', 'Todo lo que hoy vemos<small>estaba acá</small>'),
+  obs: mkLabel('obs', 'Todo lo que hoy vemos'),
+  mw: mkLabel('mw l', 'Vía Láctea'),
+  m31: mkLabel('m31 r', 'Andrómeda'),
+  sol: mkLabel('sol below', 'Sistema Solar'),
+};
+
+/* =====================================================================
+   Idiomas (español por defecto · inglés)
+   ===================================================================== */
+LANG = window.__BB_LANG === 'en' ? 'en' : 'es';
+const EPOCHS_EN = [
+  ['Before 10⁻⁴³ s', 'Planck era', 'Everything is so dense that gravity needs a quantum theory we do not have yet. What you see here is symbolic.'],
+  ['10⁻⁴³ – 10⁻³⁶ s', 'Speculative era', 'Energies impossible to recreate in a lab. Perhaps all forces were unified; we still do not know.'],
+  ['10⁻³⁶ – 10⁻³² s', 'Inflation', 'A widely accepted hypothesis: space stretches at least 10²⁶ times in an instant. Quantum fluctuations freeze and will become the seeds of galaxies.'],
+  ['10⁻³² – 10⁻¹¹ s', 'A plasma everywhere', 'The energy of inflation turns into particles. All of space fills with a plasma that is equally hot everywhere.'],
+  ['10⁻¹¹ – 10⁻⁵ s', 'Quark soup', 'Particles have just acquired mass. Quarks and gluons roam free at trillions of degrees.'],
+  ['10⁻⁵ s – 1 s', 'Protons and neutrons are born', 'Quarks group in threes. These protons will become the hydrogen nuclei in your body.'],
+  ['1 s – 3 min', 'Neutrinos break free', 'Neutrinos stop interacting with matter and travel freely to this day. Electrons and positrons annihilate.'],
+  ['3 – 20 min', 'Nucleosynthesis', 'The whole universe works like a fusion reactor: helium nuclei form (a quarter of the mass), plus traces of lithium.'],
+  ['20 min – 380,000 years', 'An opaque sea of light', 'Light keeps bouncing off nuclei and electrons and cannot travel far. From 50,000 years on, dark matter begins to clump.'],
+  ['380,000 years', 'Recombination', 'Electrons join nuclei and the universe becomes transparent. That light, stretched, is the cosmic background we measure today.'],
+  ['380,000 – 3 million years', 'The glow fades', 'The light that fills everything cools from orange to dark red. There are no stars yet: only gas and dark matter.'],
+  ['3 – 100 million years', 'Dark ages', 'Nothing shines. Gravity silently amplifies the tiny differences in density and builds the cosmic web.'],
+  ['100 – 300 million years', 'First stars', 'In the knots of the web, gas collapses and the first stars ignite. They begin forging carbon, oxygen and iron.'],
+  ['300 million – 1 billion years', 'Reionization', 'Light from young galaxies ionizes the intergalactic gas again, in bubbles that grow until they merge.'],
+  ['1 – 7.7 billion years', 'Galaxies grow', 'Galaxies feed on gas and merge along the filaments. The Milky Way and Andromeda build their disks.'],
+  ['~7.7 billion years', 'Expansion speeds up', 'Dark energy starts to beat gravity: the expansion stops slowing down.'],
+  ['~8.5 billion years', 'Andromeda turns around', 'Mutual attraction halts Andromeda, which starts approaching us while the rest of the universe keeps receding.'],
+  ['4.6 billion years ago', 'The Solar System is born', 'A gas cloud in the Milky Way, enriched by earlier stars, collapses and forms the Sun, the Earth and the planets.'],
+  ['Since 3.5 billion years ago', 'Dark energy dominates', 'It now outweighs all matter. Galaxies beyond the Local Group recede faster and faster.'],
+  ['13.8 billion years', 'Today', 'The cosmic background is at 2.7 K. Andromeda approaches at about 110 km/s: there is a ~50% chance they collide within the next 10 billion years.'],
+];
+const epochText = i => LANG === 'en' ? EPOCHS_EN[i] : EPOCHS[i].slice(1);
+const I18N = {
+  es: {
+    title: '¿El Big Bang fue un punto?', eyebrow: 'Del Big Bang a hoy', h1: '¿El Big Bang fue un punto?',
+    lede: 'No. Fue un estado denso y caliente en <em>todo</em> el espacio a la vez. El plano es ese espacio: infinito, sin borde y sin centro.',
+    more1: 'La cuadrícula se estira en todas partes y cada cuadro se divide en otros más chicos que vuelven a crecer. El <span class="k-obs">círculo verde</span> encierra todo lo que hoy podemos ver: al principio era diminuto, pero alrededor había más universo, igual de denso.',
+    more2: 'En el centro, la materia de la futura <span class="k-mw">Vía Láctea</span> (con los átomos de la Tierra) y, al lado, la de <span class="k-m31">Andrómeda</span>. La expansión las separó, la gravedad las frenó y hoy se acercan.',
+    temp: 'Temperatura', obs: 'Todo lo que hoy vemos medía', sep: 'Vía Láctea ↔ Andrómeda',
+    labels: 'Etiquetas', notes: 'Notas', more: '¿Qué estoy viendo?', hide: 'Ocultar', play: 'Reproducir', pause: 'Pausar',
+    cardAria: 'Explicación', stageAria: 'El espacio como un plano infinito que se expande', sliderAria: 'Tiempo desde el Big Bang', epochAria: 'Qué está pasando', langAria: 'Idioma',
+    radius: v => `${v} de radio`, modelDep: 'depende del modelo',
+    lblHere: 'Todo lo que hoy vemos<small>estaba acá</small>', lblObs: 'Todo lo que hoy vemos',
+    lblMwEarly: 'Futura Vía Láctea<small>(con la Tierra)</small>', lblMw: 'Vía Láctea<small>(con la Tierra)</small>',
+    lblM31Early: 'Futura Andrómeda', lblM31: 'Andrómeda', lblSol: 'Sistema Solar<small>hace 4.600 millones de años</small>',
+    ticks: ['10⁻⁴⁴ s', '10⁻³² s', '1 s', '380.000 años', '1.000 M años', 'Sol', 'Hoy'],
+    notesBody: `<h2>Qué es real y qué es dibujo</h2>
+  <ul>
+    <li>Las distancias, temperaturas y tiempos salen del modelo cosmológico estándar (ΛCDM, parámetros de Planck 2018). La cámara muestra distancias reales y fijas: el centro de la vista abarca unos 17 millones de años luz.</li>
+    <li>La cuadrícula es jerárquica (cada nivel mide el doble que el anterior) para que la expansión se vea a cualquier escala. Las manchas del plasma están exageradas; las reales eran de 1 parte en 100.000.</li>
+    <li>Antes de 10⁻³² s la imagen es simbólica: la inflación es una hipótesis y la era de Planck, física desconocida.</li>
+    <li>Red cósmica: aproximación de Zel'dovich. Vía Láctea y Andrómeda: colapso esférico y órbita del “argumento de tiempo”. Formas y orientaciones son ilustrativas.</li>
+  </ul>
+  <h2>Tu nota</h2>
+  <p><strong>Correcta en lo esencial:</strong> si hoy es infinito, siempre lo fue, y el Big Bang ocurrió en todas partes. Dos matices: “infinitamente denso” vale solo en el límite <em>t</em> → 0, donde la teoría deja de funcionar; y “sin bordes” no implica “infinito”: podría ser finito y sin bordes, como la superficie de una esfera.</p>
+  <h2>Fuentes</h2>
+  <ul>
+    <li>Planck Collaboration (2020), <em>A&amp;A</em> 641, A6. <a href="https://arxiv.org/abs/1807.06209" target="_blank" rel="noopener">arXiv:1807.06209</a></li>
+    <li>Davis y Lineweaver (2004), Expanding confusion. <a href="https://arxiv.org/abs/astro-ph/0310808" target="_blank" rel="noopener">arXiv:astro-ph/0310808</a></li>
+    <li>Kahn y Woltjer (1959), <em>ApJ</em> 130, 705 (argumento de tiempo).</li>
+    <li>Sawala et al. (2025), <em>Nature Astronomy</em>: ~50 % de probabilidad de choque con Andrómeda en 10.000 millones de años. <a href="https://www.nature.com/articles/s41550-025-02563-1" target="_blank" rel="noopener">doi</a></li>
+  </ul>`,
+  },
+  en: {
+    title: 'Was the Big Bang a point?', eyebrow: 'From the Big Bang to today', h1: 'Was the Big Bang a point?',
+    lede: 'No. It was a hot, dense state filling <em>all</em> of space at once. The plane is that space: infinite, with no edge and no center.',
+    more1: 'The grid stretches everywhere, and every square splits into smaller ones that grow again. The <span class="k-obs">green circle</span> encloses everything we can see today: at first it was tiny, but around it there was more universe, just as dense.',
+    more2: 'At the center, the matter of the future <span class="k-mw">Milky Way</span> (with the atoms of Earth) and, next to it, that of <span class="k-m31">Andromeda</span>. The expansion pulled them apart, gravity slowed them down, and today they are approaching each other.',
+    temp: 'Temperature', obs: 'Radius of all we see today', sep: 'Milky Way ↔ Andromeda',
+    labels: 'Labels', notes: 'Notes', more: 'What am I seeing?', hide: 'Hide', play: 'Play', pause: 'Pause',
+    cardAria: 'Explanation', stageAria: 'Space as an infinite plane that expands', sliderAria: 'Time since the Big Bang', epochAria: 'What is happening', langAria: 'Language',
+    radius: v => v, modelDep: 'model-dependent',
+    lblHere: 'Everything we see today<small>was here</small>', lblObs: 'Everything we see today',
+    lblMwEarly: 'Future Milky Way<small>(with Earth)</small>', lblMw: 'Milky Way<small>(with Earth)</small>',
+    lblM31Early: 'Future Andromeda', lblM31: 'Andromeda', lblSol: 'Solar System<small>4.6 billion years ago</small>',
+    ticks: ['10⁻⁴⁴ s', '10⁻³² s', '1 s', '380,000 yr', '1 billion yr', 'Sun', 'Today'],
+    notesBody: `<h2>What is real and what is illustration</h2>
+  <ul>
+    <li>Distances, temperatures and times come from the standard cosmological model (ΛCDM, Planck 2018 parameters). The camera shows real, fixed distances: the center of the view spans about 17 million light-years.</li>
+    <li>The grid is hierarchical (each level is twice the size of the previous one) so the expansion is visible at every scale. The blotches in the plasma are exaggerated; the real ones were 1 part in 100,000.</li>
+    <li>Before 10⁻³² s the picture is symbolic: inflation is a hypothesis and the Planck era is unknown physics.</li>
+    <li>Cosmic web: Zel'dovich approximation. Milky Way and Andromeda: spherical collapse and the “timing argument” orbit. Shapes and orientations are illustrative.</li>
+  </ul>
+  <h2>The infinite grid-paper idea</h2>
+  <p><strong>Right in essence:</strong> if the universe is infinite today, it always was, and the Big Bang happened everywhere. Two caveats: “infinitely dense” only holds in the limit <em>t</em> → 0, where the theory breaks down; and “no edges” does not imply “infinite”: space could be finite and edgeless, like the surface of a sphere.</p>
+  <h2>Sources</h2>
+  <ul>
+    <li>Planck Collaboration (2020), <em>A&amp;A</em> 641, A6. <a href="https://arxiv.org/abs/1807.06209" target="_blank" rel="noopener">arXiv:1807.06209</a></li>
+    <li>Davis &amp; Lineweaver (2004), Expanding confusion. <a href="https://arxiv.org/abs/astro-ph/0310808" target="_blank" rel="noopener">arXiv:astro-ph/0310808</a></li>
+    <li>Kahn &amp; Woltjer (1959), <em>ApJ</em> 130, 705 (timing argument).</li>
+    <li>Sawala et al. (2025), <em>Nature Astronomy</em>: ~50% chance of a collision with Andromeda within 10 billion years. <a href="https://www.nature.com/articles/s41550-025-02563-1" target="_blank" rel="noopener">doi</a></li>
+  </ul>`,
+  },
+};
+const T = k => I18N[LANG][k];
+
+/* =====================================================================
+   7. Estado, interfaz y bucle
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const slider = $('slider'), card = $('card'), bar = $('bar');
+const ST = { x: 0, playing: !REDUCED, wait: REDUCED ? 0 : 1.6, rate: 1 / 56, dragging: false, labels: true, clock: 0 };
+const C_MPC_S = 299792.458 / KM_PER_MPC;
+const CHI_P = (() => { let s = 0; const n = 4000, d = (0 - LA_MIN) / n * Math.LN10; for (let i = 0; i < n; i++) { const a = 10 ** (LA_MIN + (0 - LA_MIN) * (i + 0.5) / n); s += C_MPC_S / (a * H0s * Math.sqrt(E2(a))) * d; } return s; })();
+const ss = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); };
+function growthD(a) { const om = OM / (OM + OL * a ** 3), ol = 1 - om; return a * 2.5 * om / (om ** (4 / 7) - ol + (1 + om / 2) * (1 + ol / 70)); }
+const D_TODAY = growthD(1), LOG2_10 = Math.log2(10), LOG2_VU = Math.log2(VU_PER_MPC);
+function mediumAt(C) {
+  const t = C.t;
+  if (t < T_PLANCK) return { col: [1, 0.96, 1], I: 2.2, foam: 1 };
+  if (t < 1e-36) return { col: [0.97, 0.95, 1], I: 2.1, foam: 0.35 };
+  if (t < T_INFL_END) return { col: [0.82, 0.74, 1.0], I: 1.7, foam: 0 };
+  return { col: bb(C.T), I: Math.min(glowI(C.T), 2.2), foam: 0 };
+}
+const updatePlay = () => { $('play').textContent = ST.playing ? '❚❚' : '▶'; $('play').setAttribute('aria-label', ST.playing ? T('pause') : T('play')); };
+$('play').addEventListener('click', () => { if (ST.playing) ST.playing = false; else { if (ST.x >= 0.999) ST.x = 0; ST.playing = true; ST.wait = 0; } updatePlay(); });
+slider.addEventListener('input', () => { ST.x = slider.value / 10000; ST.playing = false; updatePlay(); });
+slider.addEventListener('pointerdown', () => { ST.dragging = true; }); addEventListener('pointerup', () => { ST.dragging = false; });
+addEventListener('keydown', e => {
+  if (e.target === slider) return;
+  if (e.key === ' ' && (e.target === document.body || e.target === renderer.domElement)) { e.preventDefault(); $('play').click(); }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { ST.x = Math.min(1, Math.max(0, ST.x + (e.key === 'ArrowRight' ? 0.01 : -0.01))); ST.playing = false; updatePlay(); }
+});
+$('lblBtn').addEventListener('click', () => { ST.labels = !ST.labels; $('lblBtn').setAttribute('aria-pressed', String(ST.labels)); $('labels').style.display = ST.labels ? '' : 'none'; });
+const toggleNotes = () => { const n = $('notes'), open = n.hidden; n.hidden = !open; $('notesBtn').setAttribute('aria-expanded', String(open)); $('notesBtn2').setAttribute('aria-expanded', String(open)); };
+$('notesBtn').addEventListener('click', toggleNotes); $('notesBtn2').addEventListener('click', toggleNotes);
+$('moreBtn').addEventListener('click', () => { const o = card.classList.toggle('open'); $('moreBtn').setAttribute('aria-expanded', String(o)); $('moreBtn').textContent = o ? T('hide') : T('more'); setTimeout(applyViewOffset, 0); });
+
+// marcas y colores de la línea de tiempo
+function renderTicks() {
+  const ticks = [[-44, ''], [-32, 'minor'], [0, 'minor'], [Math.log10(T_REC_S), ''], [ltYr(1e9), 'minor'], [Math.log10(SUN_T * S_PER_GYR), 'minor'], [LT_AGE, '']];
+  $('ticks').innerHTML = ticks.map(([lt, c], i) => `<span class="${c}" style="left:${(xOfLt(lt) * 100).toFixed(2)}%;${i === 0 ? 'transform:none' : i === ticks.length - 1 ? 'transform:translateX(-100%)' : ''}">${T('ticks')[i]}</span>`).join('');
+}
+(() => {
+  const stops = [];
+  for (let i = 0; i <= 90; i++) {
+    const x = i / 90, C = cosmoAt(ltOfX(x)), m = mediumAt(C), k = Math.min(m.I, 1.4) / 1.4, late = ss(ltYr(1.2e8), ltYr(2e9), C.lt);
+    const c = m.col.map((v, j) => Math.round(255 * Math.min(1, v * (0.08 + 0.92 * k) + late * [0.16, 0.22, 0.4][j])));
+    stops.push(`rgb(${c.join(',')}) ${(x * 100).toFixed(1)}%`);
+  }
+  $('grad').style.background = `linear-gradient(90deg, ${stops.join(',')})`;
+})();
+
+// la escena se centra en el hueco que dejan la tarjeta y la barra
+let vo = { dx: 0, dy: 0 };
+function applyViewOffset() {
+  const w = innerWidth, h = innerHeight, cr = card.getBoundingClientRect(), br = bar.getBoundingClientRect();
+  let dx = 0, dy = 0;
+  $('epoch').style.bottom = (h - br.top + 10) + 'px';
+  if (w > 760) dx = (cr.right + 8) / 2;
+  else dy = (cr.bottom - (h - br.top + 96)) / 2;
+  vo = { dx, dy };
+  const fw = w + 2 * Math.abs(dx), fh = h + 2 * Math.abs(dy);
+  camera.aspect = fw / fh;
+  if (dx || dy) camera.setViewOffset(fw, fh, dx < 0 ? 2 * -dx : 0, dy < 0 ? 2 * -dy : 0, w, h); else camera.clearViewOffset();
+  camera.updateProjectionMatrix();
+  lgMat.uniforms.uPx.value = 0.042 * renderer.domElement.height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2)) * (h / fh);
+}
+
+const medCol = new THREE.Color(), lineBright = lin(0xefe6d2).multiplyScalar(0.13), tmpC = new THREE.Color();
+const V3 = (x, y, z) => new THREE.Vector3(x, y, z), lblText = new Map();
+function setLbl(o, show, pos, html) {
+  o.visible = !!show && ST.labels; if (!o.visible) return;
+  o.position.copy(pos);
+  if (html !== undefined && lblText.get(o) !== html) { o.element.innerHTML = `<span class="t">${html}</span>`; lblText.set(o, html); }
+}
+const EP_X = EPOCHS.map(e => xOfLt(Math.log10(Math.max(e[0], 1e-44))));
+const MIN_EP = 3.8;
+let curEp = -1, epT = 0;
+function setEpoch(i, quiet) {
+  const e = epochText(i);
+  $('eWhen').textContent = e[0]; $('eTitle').textContent = e[1]; $('eText').textContent = e[2];
+  if (quiet) return;
+  if (!REDUCED && $('epoch').animate) $('epoch').animate([{ opacity: 0.2, transform: 'translateY(5px)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' });
+}
+let last = performance.now(), roT = 0, first = true;
+function frame(now) {
+  requestAnimationFrame(frame);
+  const dt = Math.min((now - last) / 1000, 0.1); last = now; ST.clock += dt;
+  if (ST.playing) {
+    if (ST.wait > 0) ST.wait -= dt;
+    else {
+      const x1 = Math.min(ST.x + 1e-3, 1), dla = Math.abs(laVis(ltOfX(x1)) - laVis(ltOfX(ST.x))) / Math.max(x1 - ST.x, 1e-6);
+      let rate = Math.min(ST.rate, 2.6 / Math.max(dla, 1e-6));
+      const ei = epochIdx(10 ** ltOfX(ST.x)), xEnd = ei + 1 < EPOCHS.length ? EP_X[ei + 1] : 1, need = MIN_EP - epT;
+      if (ei === curEp && need > 0) rate = Math.min(rate, Math.max(xEnd - ST.x, 1e-6) / need);
+      ST.x = Math.min(1, ST.x + rate * dt);
+      if (ST.x >= 1) { ST.playing = false; updatePlay(); }
+    }
+  }
+  if (!ST.dragging) slider.value = String(Math.round(ST.x * 10000));
+  const lt = ltOfX(ST.x), C = cosmoAt(lt), tg = C.t / S_PER_GYR, la = laVis(lt), aV = 10 ** la;
+  const ep = epochIdx(C.t);
+  if (ep !== curEp) { curEp = ep; epT = 0; setEpoch(ep); } else epT += dt;
+  const Md = mediumAt(C), mI = Md.I * 0.62;
+  medCol.setRGB(Md.col[0], Md.col[1], Md.col[2], THREE.SRGBColorSpace).multiplyScalar(mI);
+  const xe = C.t < T_INFL_END ? 1 : 1 / (1 + Math.exp(-(C.T - 3100) / 180));
+  const camDist = camera.position.distanceTo(controls.target);
+  // ---- hoja ----
+  const su = sheetMat.uniforms, log2S = la * LOG2_10 + LOG2_VU, m = Math.floor(log2S);
+  su.uSeff.value = 2 ** (log2S - m); su.uM.value = m; su.uS.value = Math.max(aV * VU_PER_MPC, 1e-30);
+  su.uMedium.value.copy(medCol);
+  su.uLineCol.value.copy(lineBright).lerp(tmpC.copy(medCol).multiplyScalar(0.3), ss(0.3, 1.0, mI));
+  su.uGridA.value = 0.95 - 0.45 * ss(ltYr(5e7), ltYr(2e9), lt);
+  su.uPlasma.value = 0.42 * ss(-36.5, -35, lt) * (1 - ss(Math.log10(T_REC_S), ltYr(4e7), lt));
+  su.uGrowth.value = Math.pow(Math.min(growthD(C.a) / D_TODAY, 1), 0.6);
+  su.uWebA.value = 0.9 * ss(ltYr(2e7), ltYr(3e8), lt);
+  su.uGalA.value = ss(ltYr(1.2e8), ltYr(1.3e9), lt);
+  su.uIon.value = ss(ltYr(1.5e8), ltYr(1.0e9), lt);
+  su.uIonA.value = ss(ltYr(1.2e8), ltYr(2.0e8), lt) * (1 - ss(ltYr(8e8), ltYr(1.5e9), lt));
+  su.uFogK.value = (0.05 + 0.35 * xe) / Math.max(camDist, 1e-3);
+  su.uFogCol.value.copy(medCol).multiplyScalar(0.8);
+  const obsR = CHI_P * aV * VU_PER_MPC; su.uObsR.value = obsR; su.uObsA.value = 0.95;
+  su.uTime.value = ST.clock; su.uFoam.value = Md.foam;
+  sheet.position.set(controls.target.x, 0, controls.target.z);
+  const ssz = Math.max(9000, camDist * 160); sheet.scale.set(ssz, 1, ssz);
+  su.uEdge.value = ssz * 0.48; su.uEdgeC.value.set(sheet.position.x, sheet.position.z);
+  sky.position.copy(camera.position);
+  skyMat.uniforms.uHor.value.copy(medCol).multiplyScalar(0.22 + 0.2 * xe).add(tmpC.setRGB(0.004, 0.005, 0.011));
+  bloom.strength = 0.8 - 0.5 * ss(0.8, 1.4, mI);
+  // ---- Vía Láctea y Andrómeda ----
+  const lu = lgMat.uniforms, lgA = C.spec ? 0 : ss(ltYr(2e7), ltYr(2.5e8), lt);
+  lg.visible = lgA > 0.002;
+  if (lg.visible) {
+    lu.uT.value = tg; lu.uA.value = C.a; lu.uS.value = C.a * VU_PER_MPC;
+    lu.uC0.value.set(0, 0, 0); lu.uC1.value.set(sepCom(tg), 0, 0);
+    lu.uAlpha.value = lgA; lu.uDM.value = 0.17 - 0.09 * ss(2, 8, tg); lu.uBar.value = 0.42;
+    const occ = ss(0.25, 1.0, mI); lu.uOcc.value = occ * 0.85; lu.uInk.value = occ * 0.6;
+  }
+  controls.update();
+  // ---- etiquetas ----
+  const fh = innerHeight + 2 * Math.abs(vo.dy), pxPerVu = fh / (2 * camDist * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
+  const obsPx = obsR * pxPerVu, sepVu = C.spec ? 0 : sepPhys(tg) * VU_PER_MPC;
+  setLbl(L.here, obsPx < 28, V3(0, 0, 0), T('lblHere'));
+  setLbl(L.obs, obsPx >= 28 && obsR < 420, V3(0, 0, -obsR), T('lblObs'));
+  const early = tg < 1.3;
+  setLbl(L.mw, lgA > 0.6 && obsPx >= 28, V3(0, 0.15, 0), early ? T('lblMwEarly') : T('lblMw'));
+  setLbl(L.m31, lgA > 0.6 && sepVu * pxPerVu > 34, V3(sepVu, 0.15, 0), early ? T('lblM31Early') : T('lblM31'));
+  if (L.m31.visible) { const nx = L.m31.position.clone().project(camera).x, flip = (nx + 1) / 2 * innerWidth + L.m31.element.offsetWidth > innerWidth - 10; L.m31.center.set(flip ? 1 : 0, 1); L.m31.element.classList.toggle('l', flip); L.m31.element.classList.toggle('r', !flip); }
+  if (tg > SUN_T && camDist < 6) { const sp = SUN_F.clone().applyMatrix3(GALS[0].rot).multiplyScalar(VU_PER_MPC); setLbl(L.sol, true, sp, T('lblSol')); } else setLbl(L.sol, false);
+  // ---- lecturas ----
+  roT -= dt;
+  if (roT <= 0) {
+    roT = 0.1;
+    $('rt').textContent = fmtTime(C.t);
+    $('rtemp').textContent = C.spec ? '—' : fmtTemp(C.T);
+    const k = C.spec ? 1 : Math.min(glowI(C.T), 1);
+    $('tdot').style.background = `rgb(${(C.spec ? [0.85, 0.8, 1] : bb(C.T)).map(v => Math.round(255 * v * (0.12 + 0.88 * k))).join(',')})`;
+    $('robs').textContent = C.spec ? T('modelDep') : T('radius')(fmtMpc(CHI_P * C.a));
+    $('rsep').textContent = C.spec ? '—' : fmtMpc(sepPhys(tg));
+  }
+  composer.render();
+  labelRenderer.render(scene, camera);
+  if (first) { first = false; $('loading').classList.add('done'); }
+}
+function setLang(l) {
+  LANG = l === 'en' ? 'en' : 'es';
+  try { localStorage.setItem('bb-lang', LANG); } catch (e) {}
+  document.documentElement.lang = LANG; document.title = T('title');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = T(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = T(el.dataset.i18nHtml); });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', T(el.dataset.i18nAria)));
+  document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
+  $('moreBtn').textContent = card.classList.contains('open') ? T('hide') : T('more');
+  renderTicks(); updatePlay(); lblText.clear(); roT = 0;
+  if (curEp >= 0) setEpoch(curEp, true);
+  setTimeout(applyViewOffset, 0);
+}
+document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+function onResize() { renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight); labelRenderer.setSize(innerWidth, innerHeight); applyViewOffset(); }
+addEventListener('resize', onResize);
+setLang(LANG);
+applyViewOffset(); updatePlay();
+requestAnimationFrame(frame);
+</script>
+
+</body>
+</html>
