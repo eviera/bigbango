@@ -124,24 +124,33 @@ a { color: var(--heat); text-underline-offset: 2px; }
 
 @media (max-width: 760px) {
   :root { --gut: 10px; }
-  #card { padding: 13px 15px 12px; }
-  #card h1 { font-size: 24px; margin-bottom: 6px; }
-  #card .lede { font-size: 14.5px; margin-bottom: 8px; }
+  /* celular: tarjeta compacta (título + botones); el resto se abre con "Más" */
+  #card { padding: 10px 12px; max-height: calc(100% - 190px); overflow-y: auto; }
+  #card .eyebrow { display: none; }
+  #card h1 { font-size: 20px; margin-bottom: 8px; }
+  #card .lede, #live { display: none; }
+  #card.open .lede { display: block; font-size: 14.5px; margin: 10px 0 8px; }
+  #card.open #live { display: grid; }
   #card .more { display: none; }
   #card.open .more { display: block; }
   #card .more p { font-size: 13.5px; }
-  .btnrow { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 0 0 8px; }
-  .btnrow .btn, .btnrow .seg button { padding: 5px 10px; font-size: 11.5px; }
-  .btnrow .btn.cmbBtn { flex: 1 0 100%; justify-content: center; padding: 8px 12px; font-size: 12.5px; }
-  #epoch { left: var(--gut); right: var(--gut); width: auto; padding: 9px 13px 10px; }
-  #epoch .when { font-size: 10px; margin-bottom: 3px; }
-  #epoch h2 { font-size: 16px; margin-bottom: 3px; }
-  #epoch .txt { font-size: 12.5px; line-height: 1.4; }
-  #ruler { height: 36px; margin-top: 8px; }
+  .btnrow { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; margin: 0; }
+  #card.open .btnrow { flex-wrap: wrap; margin-bottom: 12px; }
+  #card:not(.open) #notesBtn2 { display: none; }
+  .btnrow .btn, .btnrow .seg button { padding: 5px 10px; font-size: 11.5px; white-space: nowrap; }
+  .btnrow .btn.cmbBtn { flex: 1 1 auto; justify-content: center; padding: 6px 10px; font-size: 12px; }
+  #epoch { left: var(--gut); right: var(--gut); width: auto; padding: 8px 12px 9px; }
+  #epoch .when { display: none; }
+  #epoch h2 { font-size: 15px; margin-bottom: 2px; }
+  #epoch .txt { font-size: 12px; line-height: 1.38; }
+  #ruler { height: 36px; margin-top: 6px; }
+  #epoch .wl { font-size: 10.5px; }
+  #bar { padding: 6px 12px 4px 8px; gap: 0 10px; }
+  #play { width: 38px; height: 38px; font-size: 13px; }
   #live { font-size: 11px; }
   #tools { display: none; }
   #notes { top: 50%; bottom: auto; left: var(--gut); right: var(--gut); width: auto; transform: translateY(-50%); max-height: 70%; }
-  #rt { font-size: 18px; }
+  #rt { font-size: 16px; }
   #ticks span.minor { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { #loading { transition: none; } }
@@ -166,7 +175,7 @@ addEventListener("error", function (e) { var l = document.getElementById("loadin
   <p class="eyebrow" data-i18n="eyebrow">Del Big Bang a hoy</p>
   <h1 data-i18n="h1">¿El Big Bang fue un punto?</h1>
   <p class="lede" data-i18n-html="lede">No. Fue un estado denso y caliente en <em>todo</em> el espacio a la vez. El plano es ese espacio: infinito, sin borde y sin centro.</p>
-  <div class="btnrow"><button class="btn cmbBtn nudge" aria-pressed="false"><span class="ic" aria-hidden="true">✦</span><span data-i18n="cmbBtn">Luz del fondo cósmico</span></button><button class="btn" id="moreBtn" aria-expanded="false">¿Qué estoy viendo?</button><button class="btn" id="notesBtn2" aria-controls="notes" data-i18n="notes">Notas</button><div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
+  <div class="btnrow"><button class="btn cmbBtn nudge" aria-pressed="false"><span class="ic" aria-hidden="true">✦</span><span data-i18n="cmbBtn">Luz del fondo cósmico</span></button><button class="btn" id="moreBtn" aria-expanded="false">Más ▾</button><button class="btn" id="notesBtn2" aria-controls="notes" data-i18n="notes">Notas</button><div class="seg lang" role="group" data-i18n-aria="langAria" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
   <div class="more">
     <p data-i18n-html="more1">La cuadrícula se estira en todas partes y cada cuadro se divide en otros más chicos que vuelven a crecer. El <span class="k-obs">círculo verde</span> encierra todo lo que hoy podemos ver: al principio era diminuto, pero alrededor había más universo, igual de denso.</p>
     <p data-i18n-html="more2">En el centro, la materia de la futura <span class="k-mw">Vía Láctea</span> (con los átomos de la Tierra) y, al lado, la de <span class="k-m31">Andrómeda</span>. La expansión las separó, la gravedad las frenó y hoy se acercan.</p>
@@ -921,7 +930,7 @@ const I18N = {
     more1: 'La cuadrícula se estira en todas partes y cada cuadro se divide en otros más chicos que vuelven a crecer. El <span class="k-obs">círculo verde</span> encierra todo lo que hoy podemos ver: al principio era diminuto, pero alrededor había más universo, igual de denso.',
     more2: 'En el centro, la materia de la futura <span class="k-mw">Vía Láctea</span> (con los átomos de la Tierra) y, al lado, la de <span class="k-m31">Andrómeda</span>. La expansión las separó, la gravedad las frenó y hoy se acercan.',
     temp: 'Temperatura', obs: 'Todo lo que hoy vemos medía', sep: 'Vía Láctea ↔ Andrómeda',
-    labels: 'Etiquetas', notes: 'Notas', more: '¿Qué estoy viendo?', hide: 'Ocultar', play: 'Reproducir', pause: 'Pausar',
+    labels: 'Etiquetas', notes: 'Notas', more: 'Más ▾', hide: 'Menos ▴', play: 'Reproducir', pause: 'Pausar',
     cardAria: 'Explicación', stageAria: 'El espacio como un plano infinito que se expande', sliderAria: 'Tiempo desde el Big Bang', epochAria: 'Qué está pasando', langAria: 'Idioma',
     radius: v => `${v} de radio`, modelDep: 'depende del modelo',
     lblHere: 'Todo lo que hoy vemos<small>estaba acá</small>', lblObs: 'Todo lo que hoy vemos',
@@ -951,7 +960,7 @@ const I18N = {
     more1: 'The grid stretches everywhere, and every square splits into smaller ones that grow again. The <span class="k-obs">green circle</span> encloses everything we can see today: at first it was tiny, but around it there was more universe, just as dense.',
     more2: 'At the center, the matter of the future <span class="k-mw">Milky Way</span> (with the atoms of Earth) and, next to it, that of <span class="k-m31">Andromeda</span>. The expansion pulled them apart, gravity slowed them down, and today they are approaching each other.',
     temp: 'Temperature', obs: 'Radius of all we see today', sep: 'Milky Way ↔ Andromeda',
-    labels: 'Labels', notes: 'Notes', more: 'What am I seeing?', hide: 'Hide', play: 'Play', pause: 'Pause',
+    labels: 'Labels', notes: 'Notes', more: 'More ▾', hide: 'Less ▴', play: 'Play', pause: 'Pause',
     cardAria: 'Explanation', stageAria: 'Space as an infinite plane that expands', sliderAria: 'Time since the Big Bang', epochAria: 'What is happening', langAria: 'Language',
     radius: v => v, modelDep: 'model-dependent',
     lblHere: 'Everything we see today<small>was here</small>', lblObs: 'Everything we see today',
@@ -1184,7 +1193,7 @@ function applyViewOffset() {
   let dx = 0, dy = 0;
   $('epoch').style.bottom = (h - br.top + 10) + 'px';
   if (w > 760) dx = (cr.right + 8) / 2;
-  else dy = (cr.bottom - (h - br.top + 96)) / 2;
+  else dy = card.classList.contains('open') && vo.dy ? vo.dy : (cr.bottom - (h - br.top + 84)) / 2;
   vo = { dx, dy };
   const fw = w + 2 * Math.abs(dx), fh = h + 2 * Math.abs(dy);
   camera.aspect = fw / fh;
@@ -1272,7 +1281,7 @@ function frame(now) {
     const f = C.lt < LT_REC ? 0 : Math.min(1, Math.max(0, Math.log(C.a / A_REC) / Math.log(1 / A_REC)));
     const cc = cmbColor(f); cmbCol.setRGB(cc[0], cc[1], cc[2], THREE.SRGBColorSpace);
     pu.uCol.value.copy(cmbCol).multiplyScalar(1.5); pu.uWl.value = 0.13 + 0.6 * f; pu.uTime.value = ST.clock;
-    pu.uAspect.value = innerWidth / innerHeight; pu.uSize.value = 26 * renderer.getPixelRatio();
+    pu.uAspect.value = innerWidth / innerHeight; pu.uSize.value = 26 * renderer.getPixelRatio() * (innerWidth <= 760 ? 0.62 : 1);
     for (let k = 0; k < NRING; k++) {
       let R = 0, A = 0;
       if (C.lt >= LT_REC && tg < RING_TARR[k]) { R = ringD(k, C.lt, C.a) * VU_PER_MPC; A = k === TODAY_RING ? 1 : k < TODAY_RING ? 0.3 : Math.max(0.12, 0.42 - 0.08 * (k - TODAY_RING - 1)); }
